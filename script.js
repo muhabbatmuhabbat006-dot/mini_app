@@ -1,12 +1,11 @@
 const tg = window.Telegram.WebApp;
-
 tg.expand();
 
 let currentQuestion = 0;
 let score = 0;
+let selectedAnswer = null;
 
 const questions = [
-
 {
 question:"Oshqozon-ichak traktining yuqumli bo‘lmagan patologiyasi tufayli kelib chiqadigan ko‘ngil aynishi va qusish sababi:",
 answers:[
@@ -41,83 +40,82 @@ correct:3
 },
 
 {
-question:"Yara kasalligi terapiyasi quyidagilarni o‘z ichiga oladi:",
+question:"Yara kasalligi terapiyasi:",
 answers:[
 "Yotoq tartibi va maxsus parhez",
-"Aminoglikozidlar guruhi antibiotiklari",
-"Faqat jarrohlik davosi",
-"Oziq-ovqatni to‘liq to‘xtatish"
+"Aminoglikozidlar",
+"Faqat operatsiya",
+"Ovqatni to‘xtatish"
 ],
 correct:0
 },
 
 {
-question:"Yarani jarrohlik yo‘li bilan davolashga ko‘rsatma:",
+question:"Yarani jarrohlik davolashga ko‘rsatma:",
 answers:[
 "Malignizatsiya",
 "Kamqonlik",
-"TVI 27 dan pastligi",
-"Tez-tez zarda qaynashi"
+"TVI pastligi",
+"Zarda qaynashi"
 ],
 correct:0
 },
-    {
-question:"Yarani jarrohlik yo‘li bilan davolash asorati:",
+
+{
+question:"Yarani jarrohlik davolash asorati:",
 answers:[
 "Giperglikemiya",
-"Temir tanqisligi anemiyasi",
+"Temir tanqisligi",
 "Demping sindromi",
-"Kuchli kekirish"
+"Kekirish"
 ],
 correct:2
 },
 
 {
-question:"Takroriy qusish shikoyati bilan murojaat qilgan bemorlarda quyidagilar zarur:",
+question:"Takroriy qusishda birinchi navbatda nima qilinadi?",
 answers:[
-"Serukalning tavsiya qilinishi",
+"Serukal berish",
 "Oshqozonni yuvish",
-"Sababini aniqlash uchun anamnez yig‘ish",
-"Umumiy siydik tahlilini o‘tkazish"
+"Anamnez yig‘ish",
+"Operatsiya"
 ],
 correct:2
 },
 
 {
-question:"Ta’sirlangan ichak sindromida eng ko‘p uchraydigan belgi:",
+question:"Ta’sirlangan ichak sindromida asosiy belgi:",
 answers:[
-"Asosan ich qotishi",
+"Ich qotishi",
 "Defekatsiya chastotasining o‘zgarishi",
-"Sutli parhez tayinlangandan so‘ng belgilarning yaxshilanishi",
-"Qon ketishi"
+"Qon ketishi",
+"Sut ichganda yaxshilanish"
 ],
 correct:1
 },
 
 {
-question:"Ta’sirlangan ichak sindromi tashxisini qo‘yish mezoni:",
+question:"Ta’sirlangan ichak sindromi mezoni:",
 answers:[
 "Ertalab ko‘ngil aynishi",
-"Belbog‘simon og‘riq",
-"Malina jelesi ko‘rinishidagi axlat",
+"Bel og‘rig‘i",
+"Malina jelesi axlat",
 "To‘liq bo‘shatilmaganlik hissi"
 ],
 correct:3
 },
 
 {
-question:"Bolalarda qabziyatni keltirib chiqaruvchi omil:",
+question:"Bolalarda qabziyat sababi:",
 answers:[
-"Ratsionda fruktozaning ko‘pligi",
+"Fruktoza ko‘pligi",
 "Laktoza yetishmovchiligi",
-"Ichak rivojlanishining tug‘ma patologiyasi",
-"Suvni ko‘p ichish"
+"Ichak tug‘ma patologiyasi",
+"Suv ko‘p ichish"
 ],
 correct:2
 }
-
 ];
-
 function startTest() {
     currentQuestion = 0;
     score = 0;
@@ -125,52 +123,127 @@ function startTest() {
 }
 
 function showQuestion() {
+
+    selectedAnswer = null;
+
     let q = questions[currentQuestion];
 
     let html = `
-        <div class="container">
-            <h2>${currentQuestion + 1}/${questions.length}</h2>
-            <h3>${q.question}</h3>
+    <div class="container">
+
+    <h2>${currentQuestion + 1}/${questions.length}</h2>
+
+    <h3>${q.question}</h3>
     `;
 
     q.answers.forEach((answer, index) => {
+
         html += `
-            <button onclick="checkAnswer(${index})">
-                ${answer}
-            </button>
+        <button id="btn${index}"
+        onclick="checkAnswer(${index})">
+        ${answer}
+        </button>
         `;
+
     });
 
-    html += `</div>`;
+    html += `
+    <br><br>
+
+    <div id="result"></div>
+
+    <button
+    id="nextBtn"
+    onclick="nextQuestion()"
+    style="display:none;">
+    ➡️ Keyingi savol
+    </button>
+
+    </div>
+    `;
 
     document.body.innerHTML = html;
 }
+function checkAnswer(index){
 
-function checkAnswer(answer) {
-    if (answer === questions[currentQuestion].correct) {
-        score++;
+    if(selectedAnswer !== null){
+        return;
     }
+
+    selectedAnswer = index;
+
+    let q = questions[currentQuestion];
+
+    let buttons = document.querySelectorAll("button");
+
+    buttons.forEach(btn=>{
+        btn.disabled = true;
+    });
+
+    if(index === q.correct){
+
+        score++;
+
+        buttons[index].style.background = "green";
+
+        document.getElementById("result").innerHTML =
+        "<h3 style='color:green'>✅ To'g'ri javob!</h3>";
+
+    }else{
+
+        buttons[index].style.background = "red";
+
+        buttons[q.correct].style.background = "green";
+
+        document.getElementById("result").innerHTML =
+        "<h3 style='color:red'>❌ Noto'g'ri!</h3>";
+
+    }
+
+    document.getElementById("nextBtn").style.display = "inline-block";
+
+}
+
+
+function nextQuestion(){
 
     currentQuestion++;
 
-    if (currentQuestion < questions.length) {
+    if(currentQuestion < questions.length){
+
         showQuestion();
-    } else {
+
+    }else{
+
         finishTest();
+
     }
+
 }
 
-function finishTest() {
+
+function finishTest(){
 
     tg.sendData(JSON.stringify({
-        score: score,
-        total: questions.length
+
+        score:score,
+
+        total:questions.length
+
     }));
 
+    let percent = Math.round(score*100/questions.length);
+
     document.body.innerHTML = `
-        <div class="container">
-            <h2>✅ Test tugadi</h2>
-            <h3>Natija: ${score}/${questions.length}</h3>
-        </div>
+    <div class="container">
+
+    <h2>✅ Test tugadi</h2>
+
+    <h3>${score}/${questions.length}</h3>
+
+    <h2>${percent}%</h2>
+
+    </div>
     `;
+
 }
