@@ -119,9 +119,14 @@ correct:2
 }
 ];
 function startTest() {
+
     currentQuestion = 0;
     score = 0;
+
+    questions.sort(() => Math.random() - 0.5);
+
     showQuestion();
+
 }
 
 function showQuestion() {
