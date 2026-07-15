@@ -211,7 +211,7 @@ function checkAnswer(index){
     btn.disabled = true;
 });
 
-    if(index === q.correct){
+   if(index === q.correct){
 
     score++;
 
@@ -227,23 +227,19 @@ function checkAnswer(index){
     document.getElementById("btn"+q.correct).style.background = "green";
 
     document.getElementById("result").innerHTML =
-`
-<h3 style='color:red'>❌ Noto'g'ri!</h3>
+    `
+    <h3 style='color:red'>❌ Noto'g'ri!</h3>
 
-<p style="color:green;font-size:18px;">
-✅ To'g'ri javob:<br>
-<b>${q.answers[q.correct]}</b>
-</p>
-`;
+    <p style="color:green;font-size:18px;">
+    ✅ To'g'ri javob:<br>
+    <b>${q.answers[q.correct]}</b>
+    </p>
+    `;
 
 }
 
-// 1,5 soniyadan keyin avtomatik keyingi savol
-setTimeout(function(){
-
-    nextQuestion();
-
-},1500);
+// Keyingi savol tugmasini ko'rsatish
+document.getElementById("nextBtn").style.display = "inline-block";
 
 }
 
