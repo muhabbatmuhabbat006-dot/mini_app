@@ -135,8 +135,27 @@ function showQuestion() {
 
     <h2>${currentQuestion + 1}/${questions.length}</h2>
 
-<h3 id="timer">⏰ 30 soniya</h3>
+<div style="
+width:100%;
+height:18px;
+background:#ddd;
+border-radius:10px;
+margin:15px 0;
+">
 
+<div id="progressBar"
+style="
+width:${((currentQuestion + 1)/questions.length)*100}%;
+height:18px;
+background:#28a745;
+border-radius:10px;
+transition:0.5s;
+">
+</div>
+
+</div>
+
+<h3 id="timer">⏰ 30 soniya</h3>
 <h3>${q.question}</h3>
     `;
 
@@ -203,7 +222,14 @@ function checkAnswer(index){
     document.getElementById("btn"+q.correct).style.background = "green";
 
     document.getElementById("result").innerHTML =
-    "<h3 style='color:red'>❌ Noto'g'ri!</h3>";
+`
+<h3 style='color:red'>❌ Noto'g'ri!</h3>
+
+<p style="color:green;font-size:18px;">
+✅ To'g'ri javob:<br>
+<b>${q.answers[q.correct]}</b>
+</p>
+`;
 
 }
 
