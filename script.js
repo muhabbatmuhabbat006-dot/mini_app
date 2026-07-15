@@ -184,16 +184,15 @@ function checkAnswer(index){
 
         score++;
 
-        buttons[index].style.background = "green";
+        document.getElementById("btn"+index).style.background = "green";
 
         document.getElementById("result").innerHTML =
         "<h3 style='color:green'>✅ To'g'ri javob!</h3>";
 
     }else{
 
-        buttons[index].style.background = "red";
-
-        buttons[q.correct].style.background = "green";
+        document.getElementById("btn"+index).style.background = "red";
+document.getElementById("btn"+q.correct).style.background = "green";
 
         document.getElementById("result").innerHTML =
         "<h3 style='color:red'>❌ Noto'g'ri!</h3>";
