@@ -189,27 +189,32 @@ function checkAnswer(index){
 
     if(index === q.correct){
 
-        score++;
+    score++;
 
-        document.getElementById("btn"+index).style.background = "green";
+    document.getElementById("btn"+index).style.background = "green";
 
-        document.getElementById("result").innerHTML =
-        "<h3 style='color:green'>✅ To'g'ri javob!</h3>";
+    document.getElementById("result").innerHTML =
+    "<h3 style='color:green'>✅ To'g'ri javob!</h3>";
 
-    }else{
+}else{
 
-        document.getElementById("btn"+index).style.background = "red";
-document.getElementById("btn"+q.correct).style.background = "green";
+    document.getElementById("btn"+index).style.background = "red";
 
-        document.getElementById("result").innerHTML =
-        "<h3 style='color:red'>❌ Noto'g'ri!</h3>";
+    document.getElementById("btn"+q.correct).style.background = "green";
 
-    }
-
-    document.getElementById("nextBtn").style.display = "inline-block";
+    document.getElementById("result").innerHTML =
+    "<h3 style='color:red'>❌ Noto'g'ri!</h3>";
 
 }
 
+// 1,5 soniyadan keyin avtomatik keyingi savol
+setTimeout(function(){
+
+    nextQuestion();
+
+},1500);
+
+}
 
 function nextQuestion(){
 
