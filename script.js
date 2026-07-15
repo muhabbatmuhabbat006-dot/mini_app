@@ -299,18 +299,6 @@ function finishTest(){
 
     tg.sendData(JSON.stringify({
 
-        score:score,
-
-        total:questions.length
-
-    }));
-
-    function finishTest(){
-
-    clearInterval(timer);
-
-    tg.sendData(JSON.stringify({
-
         score: score,
 
         total: questions.length
