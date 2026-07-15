@@ -176,9 +176,9 @@ function checkAnswer(index){
 
     let buttons = document.querySelectorAll("button");
 
-    buttons.forEach(btn=>{
-        btn.disabled = true;
-    });
+    document.querySelectorAll("[id^='btn']").forEach(btn=>{
+    btn.disabled = true;
+});
 
     if(index === q.correct){
 
