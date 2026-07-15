@@ -309,16 +309,45 @@ function finishTest(){
 
     }));
 
-    let percent = Math.round(score*100/questions.length);
+    function finishTest(){
+
+    clearInterval(timer);
+
+    tg.sendData(JSON.stringify({
+
+        score: score,
+
+        total: questions.length
+
+    }));
+
+    let percent = Math.round(score * 100 / questions.length);
+
+    let grade = "";
+
+    if(percent >= 90){
+        grade = "🏆 A'lo";
+    }
+    else if(percent >= 70){
+        grade = "🥈 Yaxshi";
+    }
+    else if(percent >= 50){
+        grade = "🥉 Qoniqarli";
+    }
+    else{
+        grade = "📚 Qayta tayyorlaning";
+    }
 
     document.body.innerHTML = `
     <div class="container">
 
-    <h2>✅ Test tugadi</h2>
+        <h2>✅ Test tugadi</h2>
 
-    <h3>${score}/${questions.length}</h3>
+        <h3>Natija: ${score}/${questions.length}</h3>
 
-    <h2>${percent}%</h2>
+        <h2>${percent}%</h2>
+
+        <h2>${grade}</h2>
 
     </div>
     `;
