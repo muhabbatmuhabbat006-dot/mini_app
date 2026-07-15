@@ -5,6 +5,8 @@ let currentQuestion = 0;
 let score = 0;
 let selectedAnswer = null;
 
+let timer;
+let timeLeft = 30;
 const questions = [
 {
 question:"Oshqozon-ichak traktining yuqumli bo‘lmagan patologiyasi tufayli kelib chiqadigan ko‘ngil aynishi va qusish sababi:",
@@ -133,7 +135,9 @@ function showQuestion() {
 
     <h2>${currentQuestion + 1}/${questions.length}</h2>
 
-    <h3>${q.question}</h3>
+<h3 id="timer">⏰ 30 soniya</h3>
+
+<h3>${q.question}</h3>
     `;
 
     q.answers.forEach((answer, index) => {
@@ -163,6 +167,9 @@ function showQuestion() {
     `;
 
     document.body.innerHTML = html;
+
+timeLeft = 30;
+startTimer();
 }
 function checkAnswer(index){
 
@@ -206,6 +213,8 @@ document.getElementById("btn"+q.correct).style.background = "green";
 
 function nextQuestion(){
 
+    clearInterval(timer);
+
     currentQuestion++;
 
     if(currentQuestion < questions.length){
@@ -221,7 +230,40 @@ function nextQuestion(){
 }
 
 
+function startTimer(){
+
+    clearInterval(timer);
+
+    timer = setInterval(function(){
+
+        timeLeft--;
+
+        const timerElement = document.getElementById("timer");
+
+        if(timerElement){
+            timerElement.innerHTML = "⏰ " + timeLeft + " soniya";
+        }
+
+        if(timeLeft <= 10 && timerElement){
+            timerElement.style.color = "red";
+        }
+
+        if(timeLeft <= 0){
+
+            clearInterval(timer);
+
+            nextQuestion();
+
+        }
+
+    },1000);
+
+}
+
+
 function finishTest(){
+
+    clearInterval(timer);
 
     tg.sendData(JSON.stringify({
 
