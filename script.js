@@ -101,14 +101,15 @@ function finishTest() {
 
 function sendResult() {
 
-    tg.sendData(JSON.stringify({
-
+    let result = {
         score: score,
-
         total: questions.length
+    };
 
-    }));
+    console.log(result);
 
-    tg.close();
+    tg.sendData(JSON.stringify(result));
+
+    alert("Natija yuborildi");
 
 }
