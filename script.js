@@ -57,13 +57,31 @@ function showQuestion() {
 
 function checkAnswer(selected) {
 
-    if (selected === questions[currentQuestion].correct) {
+    // Иккинчи марта босилишини олдини олиш
+    const buttons = document.querySelectorAll("#answers button");
+    buttons.forEach(btn => btn.disabled = true);
+
+    const correct = questions[currentQuestion].correct;
+
+    let result = document.createElement("h2");
+
+    if (selected === correct) {
         score++;
+        result.innerHTML = "✅ Тўғри!";
+        result.style.color = "green";
+    } else {
+        result.innerHTML =
+            `❌ Нотўғри!<br>✅ Тўғри жавоб: ${questions[currentQuestion].answers[correct]}`;
+        result.style.color = "red";
     }
 
-    currentQuestion++;
+    document.querySelector(".container").appendChild(result);
 
-    showQuestion();
+    // 3 секунддан кейин кейинги савол
+    setTimeout(() => {
+        currentQuestion++;
+        showQuestion();
+    }, 3000);
 
 }
 
