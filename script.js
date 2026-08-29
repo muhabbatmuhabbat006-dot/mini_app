@@ -6,7 +6,21 @@ let currentQuestion = 0;
 let score = 0;
 let selectedAnswer = null;
 
+let timer;
+let timeLeft = 30;
+
 let questions = uashQuestions;
+
+
+// ================= DIRECTION ID =================
+
+const urlParams = new URLSearchParams(
+    window.location.search
+);
+
+const directionId = parseInt(
+    urlParams.get("direction_id")
+);
 
 
 // ================= START TEST =================
@@ -19,7 +33,9 @@ function startTest() {
 
     questions = [...uashQuestions];
 
-    questions.sort(() => Math.random() - 0.5);
+    questions.sort(
+        () => Math.random() - 0.5
+    );
 
     showQuestion();
 }
@@ -30,17 +46,17 @@ function startTest() {
 function showQuestion() {
 
     if (currentQuestion >= questions.length) {
+
         finishTest();
+
         return;
     }
 
+
     selectedAnswer = null;
 
+
     const q = questions[currentQuestion];
-
-    const total = questions.length;
-
-    const progress = (currentQuestion / total) * 100;
 
 
     document.querySelector(".container").innerHTML = `
@@ -54,7 +70,7 @@ function showQuestion() {
                 </span>
 
                 <span>
-                    ${total} ta
+                    ${questions.length} ta
                 </span>
 
             </div>
@@ -64,7 +80,10 @@ function showQuestion() {
 
                 <div
                     class="progress-fill"
-                    style="width:${progress}%">
+                    style="width:${
+                        ((currentQuestion) /
+                        questions.length) * 100
+                    }%">
                 </div>
 
             </div>
@@ -74,16 +93,15 @@ function showQuestion() {
 
         <div class="question-number">
 
-            ${currentQuestion + 1} / ${total}
+            ${currentQuestion + 1} /
+            ${questions.length}
 
         </div>
 
 
         <div class="question">
 
-            <h3>
-                ${q.question}
-            </h3>
+            ${q.question}
 
         </div>
 
@@ -110,25 +128,28 @@ function showQuestion() {
     let answerHTML = "";
 
 
-    q.answers.forEach((answer, index) => {
+    q.answers.forEach(
+        (answer, index) => {
 
-        answerHTML += `
+            answerHTML += `
 
-            <button
-                class="answer-button"
-                onclick="checkAnswer(${index})">
+                <button
+                    class="answer-button"
+                    onclick="checkAnswer(${index})">
 
-                ${answer}
+                    ${answer}
 
-            </button>
+                </button>
 
-        `;
+            `;
 
-    });
+        }
+    );
 
 
-    document.getElementById("answers").innerHTML =
-        answerHTML;
+    document.getElementById(
+        "answers"
+    ).innerHTML = answerHTML;
 
 }
 
@@ -138,18 +159,23 @@ function showQuestion() {
 function checkAnswer(selected) {
 
     if (selectedAnswer !== null) {
+
         return;
     }
+
 
     selectedAnswer = selected;
 
 
     const buttons =
-        document.querySelectorAll(".answer-button");
+        document.querySelectorAll(
+            ".answer-button"
+        );
 
-    buttons.forEach(btn => {
-        btn.disabled = true;
-    });
+
+    buttons.forEach(
+        btn => btn.disabled = true
+    );
 
 
     const correct =
@@ -160,10 +186,14 @@ function checkAnswer(selected) {
 
         score++;
 
-        buttons[selected].classList.add("correct");
+
+        buttons[selected]
+            .classList.add("correct");
 
 
-        document.getElementById("result").innerHTML = `
+        document.getElementById(
+            "result"
+        ).innerHTML = `
 
             <div class="correct-result">
 
@@ -175,12 +205,17 @@ function checkAnswer(selected) {
 
     } else {
 
-        buttons[selected].classList.add("wrong");
+        buttons[selected]
+            .classList.add("wrong");
 
-        buttons[correct].classList.add("correct");
+
+        buttons[correct]
+            .classList.add("correct");
 
 
-        document.getElementById("result").innerHTML = `
+        document.getElementById(
+            "result"
+        ).innerHTML = `
 
             <div class="wrong-result">
 
@@ -191,7 +226,11 @@ function checkAnswer(selected) {
                     ✅ Тўғри жавоб:
 
                     <b>
-                        ${questions[currentQuestion].answers[correct]}
+                        ${
+                            questions[
+                                currentQuestion
+                            ].answers[correct]
+                        }
                     </b>
 
                 </div>
@@ -203,8 +242,9 @@ function checkAnswer(selected) {
     }
 
 
-    document.getElementById("nextButton").style.display =
-        "block";
+    document.getElementById(
+        "nextButton"
+    ).style.display = "block";
 
 }
 
@@ -226,74 +266,55 @@ function finishTest() {
 
     const total = questions.length;
 
+
     const percent =
-        Math.round((score / total) * 100);
+        Math.round(
+            (score / total) * 100
+        );
 
 
-    let resultTitle = "";
-    let resultText = "";
-    let resultIcon = "";
+    let title;
 
 
     if (percent >= 90) {
 
-        resultIcon = "🏆";
+        title = "🏆 A'lo natija!";
 
-        resultTitle = "Аъло натижа!";
+    } else if (percent >= 70) {
 
-        resultText =
-            "Сиз тестни жуда юқори натижа билан якунладингиз.";
+        title = "🎉 Yaxshi natija!";
 
-    }
+    } else if (percent >= 50) {
 
-    else if (percent >= 70) {
+        title = "👍 Qoniqarli natija";
 
-        resultIcon = "🎉";
+    } else {
 
-        resultTitle = "Яхши натижа!";
-
-        resultText =
-            "Билимингиз яхши даражада.";
-
-    }
-
-    else if (percent >= 50) {
-
-        resultIcon = "👍";
-
-        resultTitle = "Қониқарли натижа";
-
-        resultText =
-            "Натижангизни янада яхшилашингиз мумкин.";
-
-    }
-
-    else {
-
-        resultIcon = "📚";
-
-        resultTitle = "Кўпроқ тайёрланинг";
-
-        resultText =
-            "Мавзуларни қайта кўриб чиқиб, яна ҳаракат қилиб кўринг.";
+        title = "📚 Ko‘proq tayyorlaning";
 
     }
 
 
-    document.querySelector(".container").innerHTML = `
+    document.querySelector(
+        ".container"
+    ).innerHTML = `
 
         <div class="result-card">
 
             <div class="result-icon">
 
-                ${resultIcon}
+                ${
+                    percent >= 70
+                    ? "🏆"
+                    : "📚"
+                }
 
             </div>
 
 
             <h2>
 
-                ${resultTitle}
+                ${title}
 
             </h2>
 
@@ -312,46 +333,28 @@ function finishTest() {
             </div>
 
 
-            <p>
-
-                ${resultText}
-
-            </p>
-
-
             <div class="result-progress">
 
                 <div
                     class="result-progress-fill"
                     style="width:${percent}%">
-
                 </div>
 
             </div>
 
 
-            <div class="subscription-message">
+            <p>
 
-                🔒
+                Test yakunlandi.
 
-                <br><br>
-
-                <b>
-                    Текин тестлар тугади!
-                </b>
-
-                <br><br>
-
-                Давом этиш учун обуна сотиб олинг.
-
-            </div>
+            </p>
 
 
             <button
                 class="send-button"
                 onclick="sendResult()">
 
-                📤 Натижани ботга юбориш
+                📤 Natijani botga yuborish
 
             </button>
 
@@ -370,12 +373,17 @@ function sendResult() {
 
         score: score,
 
-        total: questions.length
+        total: questions.length,
+
+        direction_id: directionId
 
     };
 
 
-    console.log(result);
+    console.log(
+        "WEBAPP RESULT:",
+        result
+    );
 
 
     tg.sendData(
