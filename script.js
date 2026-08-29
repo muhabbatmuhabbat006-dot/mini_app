@@ -1,237 +1,385 @@
-* {
-    box-sizing: border-box;
+const tg = window.Telegram.WebApp;
+
+tg.expand();
+
+let currentQuestion = 0;
+let score = 0;
+let selectedAnswer = null;
+
+let questions = uashQuestions;
+
+
+// ================= START TEST =================
+
+function startTest() {
+
+    currentQuestion = 0;
+    score = 0;
+    selectedAnswer = null;
+
+    questions = [...uashQuestions];
+
+    questions.sort(() => Math.random() - 0.5);
+
+    showQuestion();
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background: #f2f7f4;
-    color: #222;
-}
 
-.container {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-}
+// ================= SHOW QUESTION =================
 
-/* ================= PROGRESS ================= */
+function showQuestion() {
 
-.progress-area {
-    margin-bottom: 20px;
-}
-
-.progress-info {
-    display: flex;
-    justify-content: space-between;
-    font-size: 15px;
-    margin-bottom: 8px;
-    color: #333;
-}
-
-.progress-line {
-    width: 100%;
-    height: 8px;
-    background: #dfe7e2;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.progress-fill {
-    height: 100%;
-    background: #22a447;
-    border-radius: 10px;
-    transition: width 0.4s ease;
-}
-
-/* ================= QUESTION ================= */
-
-.question-number {
-    text-align: center;
-    font-size: 16px;
-    color: #555;
-    margin-bottom: 15px;
-}
-
-.question {
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    line-height: 1.5;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-    margin-bottom: 18px;
-}
-
-/* ================= ANSWERS ================= */
-
-#answers {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.answer-button {
-    width: 100%;
-    padding: 15px;
-    border: none;
-    border-radius: 12px;
-    background: white;
-    color: #222;
-    font-size: 16px;
-    text-align: left;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-    transition: 0.2s;
-}
-
-.answer-button:hover {
-    transform: translateY(-1px);
-}
-
-.answer-button:disabled {
-    cursor: default;
-}
-
-/* ================= CORRECT ================= */
-
-.answer-button.correct {
-    background: #d9f5df;
-    color: #16752d;
-    border: 2px solid #22a447;
-}
-
-/* ================= WRONG ================= */
-
-.answer-button.wrong {
-    background: #ffe0e0;
-    color: #c62828;
-    border: 2px solid #e53935;
-}
-
-/* ================= RESULT ================= */
-
-#result {
-    margin-top: 15px;
-}
-
-.correct-result {
-    background: #d9f5df;
-    color: #16752d;
-    padding: 14px;
-    border-radius: 12px;
-    text-align: center;
-    font-weight: bold;
-}
-
-.wrong-result {
-    background: #ffe0e0;
-    color: #c62828;
-    padding: 14px;
-    border-radius: 12px;
-    text-align: center;
-    font-weight: bold;
-}
-
-.correct-answer {
-    margin-top: 10px;
-    background: white;
-    color: #16752d;
-    padding: 10px;
-    border-radius: 8px;
-}
-
-/* ================= NEXT BUTTON ================= */
-
-.next-button {
-    width: 100%;
-    margin-top: 15px;
-    padding: 15px;
-    border: none;
-    border-radius: 12px;
-    background: #22a447;
-    color: white;
-    font-size: 17px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.next-button:hover {
-    background: #198c3b;
-}
-
-/* ================= RESULT CARD ================= */
-
-.result-card {
-    background: white;
-    padding: 25px;
-    border-radius: 18px;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-.result-icon {
-    font-size: 50px;
-    margin-bottom: 10px;
-}
-
-.result-score {
-    font-size: 35px;
-    font-weight: bold;
-    margin: 15px 0;
-}
-
-.result-percent {
-    font-size: 24px;
-    font-weight: bold;
-    color: #22a447;
-    margin-bottom: 15px;
-}
-
-.result-progress {
-    width: 100%;
-    height: 10px;
-    background: #dfe7e2;
-    border-radius: 10px;
-    overflow: hidden;
-    margin: 20px 0;
-}
-
-.result-progress-fill {
-    height: 100%;
-    background: #22a447;
-    border-radius: 10px;
-}
-
-.send-button {
-    width: 100%;
-    padding: 15px;
-    border: none;
-    border-radius: 12px;
-    background: #22a447;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-/* ================= MOBILE ================= */
-
-@media (max-width: 500px) {
-
-    .container {
-        padding: 15px;
+    if (currentQuestion >= questions.length) {
+        finishTest();
+        return;
     }
 
-    .question {
-        padding: 17px;
-        font-size: 16px;
+    selectedAnswer = null;
+
+    const q = questions[currentQuestion];
+
+    const total = questions.length;
+
+    const progress = (currentQuestion / total) * 100;
+
+
+    document.querySelector(".container").innerHTML = `
+
+        <div class="progress-area">
+
+            <div class="progress-info">
+
+                <span>
+                    Savol ${currentQuestion + 1}
+                </span>
+
+                <span>
+                    ${total} ta
+                </span>
+
+            </div>
+
+
+            <div class="progress-line">
+
+                <div
+                    class="progress-fill"
+                    style="width:${progress}%">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="question-number">
+
+            ${currentQuestion + 1} / ${total}
+
+        </div>
+
+
+        <div class="question">
+
+            <h3>
+                ${q.question}
+            </h3>
+
+        </div>
+
+
+        <div id="answers"></div>
+
+
+        <div id="result"></div>
+
+
+        <button
+            id="nextButton"
+            class="next-button"
+            onclick="nextQuestion()"
+            style="display:none;">
+
+            Кейингиси →
+
+        </button>
+
+    `;
+
+
+    let answerHTML = "";
+
+
+    q.answers.forEach((answer, index) => {
+
+        answerHTML += `
+
+            <button
+                class="answer-button"
+                onclick="checkAnswer(${index})">
+
+                ${answer}
+
+            </button>
+
+        `;
+
+    });
+
+
+    document.getElementById("answers").innerHTML =
+        answerHTML;
+
+}
+
+
+// ================= CHECK ANSWER =================
+
+function checkAnswer(selected) {
+
+    if (selectedAnswer !== null) {
+        return;
     }
 
-    .answer-button {
-        font-size: 15px;
-        padding: 14px;
+    selectedAnswer = selected;
+
+
+    const buttons =
+        document.querySelectorAll(".answer-button");
+
+    buttons.forEach(btn => {
+        btn.disabled = true;
+    });
+
+
+    const correct =
+        questions[currentQuestion].correct;
+
+
+    if (selected === correct) {
+
+        score++;
+
+        buttons[selected].classList.add("correct");
+
+
+        document.getElementById("result").innerHTML = `
+
+            <div class="correct-result">
+
+                ✅ Тўғри жавоб!
+
+            </div>
+
+        `;
+
+    } else {
+
+        buttons[selected].classList.add("wrong");
+
+        buttons[correct].classList.add("correct");
+
+
+        document.getElementById("result").innerHTML = `
+
+            <div class="wrong-result">
+
+                ❌ Нотўғри жавоб!
+
+                <div class="correct-answer">
+
+                    ✅ Тўғри жавоб:
+
+                    <b>
+                        ${questions[currentQuestion].answers[correct]}
+                    </b>
+
+                </div>
+
+            </div>
+
+        `;
+
     }
+
+
+    document.getElementById("nextButton").style.display =
+        "block";
+
+}
+
+
+// ================= NEXT QUESTION =================
+
+function nextQuestion() {
+
+    currentQuestion++;
+
+    showQuestion();
+
+}
+
+
+// ================= FINISH TEST =================
+
+function finishTest() {
+
+    const total = questions.length;
+
+    const percent =
+        Math.round((score / total) * 100);
+
+
+    let resultTitle = "";
+    let resultText = "";
+    let resultIcon = "";
+
+
+    if (percent >= 90) {
+
+        resultIcon = "🏆";
+
+        resultTitle = "Аъло натижа!";
+
+        resultText =
+            "Сиз тестни жуда юқори натижа билан якунладингиз.";
+
+    }
+
+    else if (percent >= 70) {
+
+        resultIcon = "🎉";
+
+        resultTitle = "Яхши натижа!";
+
+        resultText =
+            "Билимингиз яхши даражада.";
+
+    }
+
+    else if (percent >= 50) {
+
+        resultIcon = "👍";
+
+        resultTitle = "Қониқарли натижа";
+
+        resultText =
+            "Натижангизни янада яхшилашингиз мумкин.";
+
+    }
+
+    else {
+
+        resultIcon = "📚";
+
+        resultTitle = "Кўпроқ тайёрланинг";
+
+        resultText =
+            "Мавзуларни қайта кўриб чиқиб, яна ҳаракат қилиб кўринг.";
+
+    }
+
+
+    document.querySelector(".container").innerHTML = `
+
+        <div class="result-card">
+
+            <div class="result-icon">
+
+                ${resultIcon}
+
+            </div>
+
+
+            <h2>
+
+                ${resultTitle}
+
+            </h2>
+
+
+            <div class="result-score">
+
+                ${score} / ${total}
+
+            </div>
+
+
+            <div class="result-percent">
+
+                ${percent}%
+
+            </div>
+
+
+            <p>
+
+                ${resultText}
+
+            </p>
+
+
+            <div class="result-progress">
+
+                <div
+                    class="result-progress-fill"
+                    style="width:${percent}%">
+
+                </div>
+
+            </div>
+
+
+            <div class="subscription-message">
+
+                🔒
+
+                <br><br>
+
+                <b>
+                    Текин тестлар тугади!
+                </b>
+
+                <br><br>
+
+                Давом этиш учун обуна сотиб олинг.
+
+            </div>
+
+
+            <button
+                class="send-button"
+                onclick="sendResult()">
+
+                📤 Натижани ботга юбориш
+
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+// ================= SEND RESULT =================
+
+function sendResult() {
+
+    const result = {
+
+        score: score,
+
+        total: questions.length
+
+    };
+
+
+    console.log(result);
+
+
+    tg.sendData(
+        JSON.stringify(result)
+    );
 
 }
