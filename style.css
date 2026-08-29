@@ -32,6 +32,7 @@ p {
     font-size: 16px;
 }
 
+
 /* ================= UMUMIY BUTTON ================= */
 
 button {
@@ -47,6 +48,7 @@ button {
 button:hover {
     opacity: 0.9;
 }
+
 
 /* ================= PROGRESS ================= */
 
@@ -77,6 +79,7 @@ button:hover {
     transition: width 0.4s ease;
 }
 
+
 /* ================= SAVOL ================= */
 
 .question-number {
@@ -93,6 +96,7 @@ button:hover {
     text-align: left;
     line-height: 1.5;
 }
+
 
 /* ================= JAVOBLAR ================= */
 
@@ -113,7 +117,8 @@ button:hover {
     cursor: default;
 }
 
-/* ================= TO'G'RI ================= */
+
+/* ================= TO'G'RI JAVOB ================= */
 
 .answer-button.correct {
     background: #d9f5df;
@@ -121,13 +126,15 @@ button:hover {
     border: 2px solid #22a447;
 }
 
-/* ================= NOTO'G'RI ================= */
+
+/* ================= NOTO'G'RI JAVOB ================= */
 
 .answer-button.wrong {
     background: #ffe0e0;
     color: #c62828;
     border: 2px solid #e53935;
 }
+
 
 /* ================= NATIJA XABARI ================= */
 
@@ -159,6 +166,7 @@ button:hover {
     border-radius: 8px;
 }
 
+
 /* ================= KEYINGISI ================= */
 
 .next-button {
@@ -173,6 +181,7 @@ button:hover {
     background: #198c3b;
 }
 
+
 /* ================= YAKUNIY NATIJA ================= */
 
 .result-card {
@@ -183,6 +192,7 @@ button:hover {
 
 .result-icon {
     font-size: 45px;
+    margin-bottom: 10px;
 }
 
 .result-score {
@@ -211,13 +221,32 @@ button:hover {
     height: 100%;
     background: #22a447;
     border-radius: 10px;
+    transition: width 0.5s ease;
 }
+
+
+/* ================= NATIJANI YUBORISH ================= */
 
 .send-button {
     background: #0088cc;
     color: white;
     font-weight: bold;
 }
+
+
+/* ================= OBUNA XABARI ================= */
+
+.subscription-message {
+    margin-top: 20px;
+    padding: 15px;
+    background: #fff4d6;
+    color: #7a5700;
+    border-radius: 12px;
+    font-size: 16px;
+    line-height: 1.5;
+    border: 1px solid #f0d98c;
+}
+
 
 /* ================= TELEFON ================= */
 
@@ -239,6 +268,10 @@ button:hover {
     .answer-button {
         font-size: 15px;
         padding: 13px;
+    }
+
+    .result-score {
+        font-size: 30px;
     }
 
 }
