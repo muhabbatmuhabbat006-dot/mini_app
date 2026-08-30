@@ -31,14 +31,30 @@ let selectedAnswer = false;
 
 
 // ==================================================
-// YO'NALISH ID
+// YO‘NALISH ID
 // ==================================================
 
-const params =
-    new URLSearchParams(window.location.search);
+const params = new URLSearchParams(
+    window.location.search
+);
 
-const directionId =
-    params.get("direction_id");
+const directionId = params.get("direction_id");
+
+
+// ==================================================
+// API MANZILI
+// ==================================================
+
+// MUHIM:
+// Bu yerga VPS SERVERINGIZ IP MANZILINI yozasiz.
+//
+// Masalan:
+// const API_URL = "http://123.123.123.123:8080/api/tests";
+//
+// Hozircha lokal test uchun:
+
+const API_URL =
+    "http://127.0.0.1:8080/api/tests";
 
 
 // ==================================================
@@ -73,18 +89,61 @@ if (!telegramId) {
 
 
 // ==================================================
+// YO‘NALISH ID TEKSHIRISH
+// ==================================================
+
+if (!directionId && telegramId) {
+
+    document.querySelector(".container").innerHTML = `
+
+        <div class="result-card">
+
+            <div class="result-icon">
+                ⚠️
+            </div>
+
+            <h2>
+                Yo‘nalish tanlanmagan
+            </h2>
+
+            <p>
+                Testni boshlash uchun
+                avval yo‘nalishni tanlang.
+            </p>
+
+        </div>
+
+    `;
+
+}
+
+
+// ==================================================
 // TESTNI BOSHLASH
 // ==================================================
 
-function startTest() {
+async function startTest() {
 
     if (!telegramId) {
+
         return;
+
+    }
+
+
+    if (!directionId) {
+
+        alert(
+            "❌ Yo‘nalish aniqlanmadi."
+        );
+
+        return;
+
     }
 
 
     // ----------------------------------------------
-    // TESTNI BOSHLAGANINI BELGILASH
+    // TEST HOLATI
     // ----------------------------------------------
 
     testStarted = true;
@@ -93,51 +152,363 @@ function startTest() {
 
     selectedAnswer = false;
 
-
     currentQuestion = 0;
 
     score = 0;
 
-
-    // ----------------------------------------------
-    // SAVOLLARNI OLISH
-    // ----------------------------------------------
-
-    questions = [...uashQuestions];
+    questions = [];
 
 
     // ----------------------------------------------
-    // SAVOLLARNI ARALASHTIRISH
+    // YUKLANAYOTGAN OYNA
     // ----------------------------------------------
 
-    questions.sort(
-        () => Math.random() - 0.5
-    );
+    document.querySelector(
+        ".container"
+    ).innerHTML = `
+
+        <div class="result-card">
+
+            <div class="result-icon">
+                ⏳
+            </div>
+
+            <h2>
+                Testlar yuklanmoqda...
+            </h2>
+
+            <p>
+                Iltimos, biroz kuting.
+            </p>
+
+        </div>
+
+    `;
 
 
-    // ----------------------------------------------
-    // 10 TA SAVOL
-    // ----------------------------------------------
+    // ==================================================
+    // API DAN TESTLARNI OLISH
+    // ==================================================
 
-    questions =
-        questions.slice(0, 10);
+    try {
+
+        const url =
+            API_URL +
+            "?direction_id=" +
+            encodeURIComponent(directionId) +
+            "&user_id=" +
+            encodeURIComponent(telegramId);
 
 
-    showQuestion();
+        console.log(
+            "API:",
+            url
+        );
+
+
+        const response =
+            await fetch(url);
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Server javobi: " +
+                response.status
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "API NATIJA:",
+            data
+        );
+
+
+        // ==================================================
+        // OBUNA KERAK
+        // ==================================================
+
+        if (
+            data.subscription_required
+        ) {
+
+            showSubscriptionRequired(
+                data
+            );
+
+            return;
+
+        }
+
+
+        // ==================================================
+        // API XATOSI
+        // ==================================================
+
+        if (!data.success) {
+
+            throw new Error(
+                data.message ||
+                data.error ||
+                "Testlarni olishda xatolik."
+            );
+
+        }
+
+
+        // ==================================================
+        // TESTLAR YO‘Q
+        // ==================================================
+
+        if (
+            !data.tests ||
+            data.tests.length === 0
+        ) {
+
+            document.querySelector(
+                ".container"
+            ).innerHTML = `
+
+                <div class="result-card">
+
+                    <div class="result-icon">
+                        📭
+                    </div>
+
+                    <h2>
+                        Testlar mavjud emas
+                    </h2>
+
+                    <p>
+                        Ushbu yo‘nalish uchun
+                        hozircha test savollari
+                        kiritilmagan.
+                    </p>
+
+                    <button
+                        class="finish-close-button"
+                        onclick="goBack()">
+
+                        ← Orqaga
+
+                    </button>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        // ==================================================
+        // TESTLARNI SAQLASH
+        // ==================================================
+
+        questions =
+            data.tests;
+
+
+        // ==================================================
+        // TESTLARNI ARALASHTIRISH
+        // ==================================================
+
+        questions.sort(
+            () => Math.random() - 0.5
+        );
+
+
+        // ==================================================
+        // 50 TA TESTDAN OSHMASIN
+        // ==================================================
+
+        questions =
+            questions.slice(0, 50);
+
+
+        // ==================================================
+        // TESTNI KO‘RSATISH
+        // ==================================================
+
+        showQuestion();
+
+
+    } catch (error) {
+
+        console.error(
+            "TEST API ERROR:",
+            error
+        );
+
+
+        document.querySelector(
+            ".container"
+        ).innerHTML = `
+
+            <div class="result-card">
+
+                <div class="result-icon">
+                    ❌
+                </div>
+
+                <h2>
+                    Xatolik yuz berdi
+                </h2>
+
+                <p>
+                    Testlarni yuklab bo‘lmadi.
+                </p>
+
+                <p>
+                    <small>
+                        ${error.message}
+                    </small>
+                </p>
+
+                <button
+                    class="retry-button"
+                    onclick="startTest()">
+
+                    🔄 Qayta urinish
+
+                </button>
+
+                <button
+                    class="finish-close-button"
+                    onclick="goBack()">
+
+                    ← Orqaga
+
+                </button>
+
+            </div>
+
+        `;
+
+    }
+
 }
 
 
 // ==================================================
-// SAVOLNI KO'RSATISH
+// OBUNA KERAK
+// ==================================================
+
+function showSubscriptionRequired(data) {
+
+    document.querySelector(
+        ".container"
+    ).innerHTML = `
+
+        <div class="result-card">
+
+            <div class="result-icon">
+                🔒
+            </div>
+
+            <h2>
+                Obuna kerak
+            </h2>
+
+            <div class="subscription-message">
+
+                ⚠️ Sizning 10 ta bepul
+                testingiz tugagan.
+
+                <br><br>
+
+                📝 Ishlatilgan bepul testlar:
+                <b>
+                    ${data.used_free || 10}
+                </b>
+
+                <br><br>
+
+                To‘liq testlardan foydalanish
+                uchun obuna sotib oling.
+
+            </div>
+
+
+            <button
+                class="send-button"
+                onclick="sendSubscriptionRequest()">
+
+                💳 Obuna sotib olish
+
+            </button>
+
+
+            <button
+                class="finish-close-button"
+                onclick="goBack()">
+
+                ← Orqaga
+
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+// ==================================================
+// OBUNA SO‘ROVI
+// ==================================================
+
+function sendSubscriptionRequest() {
+
+    const result = {
+
+        type:
+            "subscription_required",
+
+        user_id:
+            telegramId,
+
+        direction_id:
+            directionId
+
+    };
+
+
+    console.log(
+        "OBUNA SO‘ROVI:",
+        result
+    );
+
+
+    tg.sendData(
+        JSON.stringify(result)
+    );
+
+}
+
+
+// ==================================================
+// SAVOLNI KO‘RSATISH
 // ==================================================
 
 function showQuestion() {
 
-    if (currentQuestion >= questions.length) {
+    if (
+        currentQuestion >=
+        questions.length
+    ) {
 
         finishTest(true);
 
         return;
+
     }
 
 
@@ -149,11 +520,15 @@ function showQuestion() {
 
 
     const progress =
-        ((currentQuestion + 1) /
-        questions.length) * 100;
+        (
+            (currentQuestion + 1) /
+            questions.length
+        ) * 100;
 
 
-    document.querySelector(".container").innerHTML = `
+    document.querySelector(
+        ".container"
+    ).innerHTML = `
 
         <!-- ====================================== -->
         <!-- PROGRESS -->
@@ -168,9 +543,13 @@ function showQuestion() {
                 </span>
 
                 <span>
+
                     ${currentQuestion + 1}
+
                     /
+
                     ${questions.length}
+
                 </span>
 
             </div>
@@ -181,6 +560,7 @@ function showQuestion() {
                 <div
                     class="progress-fill"
                     style="width:${progress}%">
+
                 </div>
 
             </div>
@@ -278,8 +658,10 @@ function showQuestion() {
     );
 
 
-    document.getElementById("answers").innerHTML =
-        answerHTML;
+    document.getElementById(
+        "answers"
+    ).innerHTML = answerHTML;
+
 }
 
 
@@ -290,7 +672,9 @@ function showQuestion() {
 function checkAnswer(selected) {
 
     if (selectedAnswer) {
+
         return;
+
     }
 
 
@@ -313,14 +697,18 @@ function checkAnswer(selected) {
 
 
     const correct =
-        questions[currentQuestion].correct;
+        questions[
+            currentQuestion
+        ].correct;
 
 
     // ==================================================
-    // TO'G'RI JAVOB
+    // TO‘G‘RI JAVOB
     // ==================================================
 
-    if (selected === correct) {
+    if (
+        selected === correct
+    ) {
 
         score++;
 
@@ -355,7 +743,7 @@ function checkAnswer(selected) {
 
 
     // ==================================================
-    // NOTO'G'RI JAVOB
+    // NOTO‘G‘RI JAVOB
     // ==================================================
 
     else {
@@ -386,11 +774,13 @@ function checkAnswer(selected) {
                 ✅ To‘g‘ri javob:
 
                 <b>
+
                     ${
                         questions[
                             currentQuestion
                         ].answers[correct]
                     }
+
                 </b>
 
             </div>
@@ -420,6 +810,7 @@ function nextQuestion() {
     currentQuestion++;
 
     showQuestion();
+
 }
 
 
@@ -439,10 +830,14 @@ function confirmFinish() {
         finishTest(true);
 
         return;
+
     }
 
 
-    showFinishModal(remaining);
+    showFinishModal(
+        remaining
+    );
+
 }
 
 
@@ -450,13 +845,17 @@ function confirmFinish() {
 // YAKUNLASH MODALI
 // ==================================================
 
-function showFinishModal(remaining) {
+function showFinishModal(
+    remaining
+) {
 
     closeModal();
 
 
     const modal =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
 
     modal.className =
@@ -469,31 +868,33 @@ function showFinishModal(remaining) {
 
             <div class="modal-error">
 
-                ⚠️ Огоҳлантириш
+                ⚠️ Ogohlantirish
 
             </div>
 
 
             <div class="confirm-text">
 
-                Сизда ҳали
+                Sizda hali
+
                 <b>
-                    ${remaining} та савол
+                    ${remaining} ta savol
                 </b>
-                бор.
+
+                bor.
 
                 <br><br>
 
-                Тестни ҳозир якунласангиз,
-                жавоб берилмаган саволлар
+                Testni hozir yakunlasangiz,
+                javob berilmagan savollar
                 <b>
-                    нотўғри
+                    noto‘g‘ri
                 </b>
-                ҳисобланади.
+                hisoblanadi.
 
                 <br><br>
 
-                Тестни якунлайсизми?
+                Testni yakunlaysizmi?
 
             </div>
 
@@ -504,7 +905,7 @@ function showFinishModal(remaining) {
                     class="cancel-button"
                     onclick="closeModal()">
 
-                    Отмена
+                    Bekor qilish
 
                 </button>
 
@@ -513,7 +914,7 @@ function showFinishModal(remaining) {
                     class="ok-button"
                     onclick="finishTest(false)">
 
-                    Тестни якунлаш
+                    Testni yakunlash
 
                 </button>
 
@@ -524,7 +925,10 @@ function showFinishModal(remaining) {
     `;
 
 
-    document.body.appendChild(modal);
+    document.body.appendChild(
+        modal
+    );
+
 }
 
 
@@ -565,11 +969,14 @@ function confirmExit() {
         finishTest(true);
 
         return;
+
     }
 
 
     const modal =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
 
     modal.className =
@@ -582,27 +989,28 @@ function confirmExit() {
 
             <div class="modal-error">
 
-                ⚠️ Тесттен чиқиш
+                ⚠️ Testdan chiqish
 
             </div>
 
 
             <div class="confirm-text">
 
-                Сиз тестни тугалламадингиз.
+                Siz testni tugatmadingiz.
 
                 <br><br>
 
-                Агар ҳозир чиқсангиз,
+                Agar hozir chiqsangiz,
+
                 <b>
-                    бепул тест ҳуқуқингиз
-                    сарфланган ҳисобланади.
+                    bepul test huquqingiz
+                    sarflangan hisoblanadi.
                 </b>
 
                 <br><br>
 
-                Тестни якунланг ёки
-                обуна олинг.
+                Testni yakunlang yoki
+                obuna oling.
 
             </div>
 
@@ -613,7 +1021,7 @@ function confirmExit() {
                     class="cancel-button"
                     onclick="closeModal()">
 
-                    Давом этиш
+                    Davom etish
 
                 </button>
 
@@ -622,7 +1030,7 @@ function confirmExit() {
                     class="ok-button"
                     onclick="finishTest(false)">
 
-                    Тестни якунлаш
+                    Testni yakunlash
 
                 </button>
 
@@ -633,7 +1041,10 @@ function confirmExit() {
     `;
 
 
-    document.body.appendChild(modal);
+    document.body.appendChild(
+        modal
+    );
+
 }
 
 
@@ -641,12 +1052,15 @@ function confirmExit() {
 // TEST YAKUNI
 // ==================================================
 
-function finishTest(fullFinish) {
+function finishTest(
+    fullFinish
+) {
 
     closeModal();
 
 
-    testCompleted = true;
+    testCompleted =
+        fullFinish;
 
 
     const totalQuestions =
@@ -658,10 +1072,16 @@ function finishTest(fullFinish) {
 
 
     const percent =
+        totalQuestions > 0
+        ?
         Math.round(
-            (finalScore /
-            totalQuestions) * 100
-        );
+            (
+                finalScore /
+                totalQuestions
+            ) * 100
+        )
+        :
+        0;
 
 
     let status;
@@ -680,7 +1100,8 @@ function finishTest(fullFinish) {
         status =
             "🏆 A’lo";
 
-        icon = "🏆";
+        icon =
+            "🏆";
 
         comment = `
             Juda yaxshi natija!
@@ -694,7 +1115,8 @@ function finishTest(fullFinish) {
         status =
             "✅ Qoniqarli";
 
-        icon = "🎉";
+        icon =
+            "🎉";
 
         comment = `
             Yaxshi natija.
@@ -709,7 +1131,8 @@ function finishTest(fullFinish) {
         status =
             "❌ Qoniqarsiz";
 
-        icon = "❌";
+        icon =
+            "❌";
 
         comment = `
             Bilimlaringizni yana bir bor
@@ -750,7 +1173,9 @@ function finishTest(fullFinish) {
             <div class="result-score">
 
                 ${totalQuestions} dan
+
                 ${finalScore} ta
+
                 to‘g‘ri javob
 
             </div>
@@ -844,7 +1269,6 @@ function finishTest(fullFinish) {
 
             <!-- ================================= -->
             <!-- ORQAGA -->
-            <!-- ================================= -->
 
             <button
                 class="finish-close-button"
@@ -857,6 +1281,7 @@ function finishTest(fullFinish) {
         </div>
 
     `;
+
 }
 
 
@@ -866,7 +1291,9 @@ function finishTest(fullFinish) {
 
 function goBack() {
 
-    if (window.history.length > 1) {
+    if (
+        window.history.length > 1
+    ) {
 
         window.history.back();
 
@@ -887,19 +1314,38 @@ function goBack() {
 
 function sendResult() {
 
+    if (!telegramId) {
+
+        return;
+
+    }
+
+
     const result = {
 
-        user_id: telegramId,
+        type:
+            "test_result",
 
-        score: score,
+        user_id:
+            telegramId,
 
-        total: questions.length,
+        score:
+            score,
+
+        total:
+            questions.length,
 
         percent:
+            questions.length > 0
+            ?
             Math.round(
-                (score /
-                questions.length) * 100
-            ),
+                (
+                    score /
+                    questions.length
+                ) * 100
+            )
+            :
+            0,
 
         direction_id:
             directionId,
@@ -924,10 +1370,13 @@ function sendResult() {
 
 
 // ==================================================
-// BOSHLANG'ICH OYNA
+// BOSHLANG‘ICH OYNA
 // ==================================================
 
-if (telegramId) {
+if (
+    telegramId &&
+    directionId
+) {
 
     document.querySelector(
         ".container"
@@ -936,25 +1385,42 @@ if (telegramId) {
         <div class="result-card">
 
             <div class="result-icon">
+
                 📝
+
             </div>
 
 
             <h1>
+
                 Test platformasi
+
             </h1>
 
 
             <p>
-                Sizga 10 ta savoldan
-                iborat bepul test beriladi.
+
+                Sizga 10 ta bepul test
+                beriladi.
+
             </p>
 
 
             <p>
-                ⚠️ Bepul test
-                Telegram ID bo‘yicha
-                faqat bir marta beriladi.
+
+                📚 Har bir yo‘nalish uchun
+                bepul test limiti alohida
+                hisoblanadi.
+
+            </p>
+
+
+            <p>
+
+                🔒 Bepul testlar tugagach,
+                to‘liq testlardan foydalanish
+                uchun obuna kerak bo‘ladi.
+
             </p>
 
 
@@ -974,16 +1440,19 @@ if (telegramId) {
 
 
 // ==================================================
-// TELEGRAM ID MA'LUMOTI
+// TELEGRAM ID MA‘LUMOTI
 // ==================================================
 
 window.testStartedFromTelegram = {
 
-    user_id: telegramId,
+    user_id:
+        telegramId,
 
-    direction_id: directionId,
+    direction_id:
+        directionId,
 
-    free_test: true
+    free_test:
+        true
 
 };
 
@@ -1002,13 +1471,13 @@ console.log(
 );
 
 console.log(
-    "Yo'nalish ID:",
+    "Yo‘nalish ID:",
     directionId
 );
 
 console.log(
-    "Bepul test:",
-    true
+    "API:",
+    API_URL
 );
 
 console.log(
