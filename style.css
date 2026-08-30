@@ -4,31 +4,32 @@
 
 body {
     font-family: Arial, sans-serif;
-    background: #f5f7fb;
+    background: linear-gradient(135deg, #dbeafe, #ede9fe, #dcfce7);
     margin: 0;
     padding: 15px;
     text-align: center;
-    color: #222;
+    color: #1e293b;
 }
 
 .container {
-    background: white;
+    background: #ffffff;
     max-width: 500px;
     margin: auto;
     padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 }
 
 /* ================= BOSHLANG'ICH OYNA ================= */
 
 h1 {
-    color: #0088cc;
+    color: #2563eb;
     font-size: 26px;
+    font-weight: bold;
 }
 
 p {
-    color: #555;
+    color: #64748b;
     font-size: 16px;
 }
 
@@ -41,12 +42,15 @@ button {
     padding: 14px;
     margin-top: 10px;
     font-size: 16px;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
+    transition: 0.25s;
+    font-weight: 600;
 }
 
 button:hover {
     opacity: 0.9;
+    transform: translateY(-2px);
 }
 
 
@@ -60,21 +64,22 @@ button:hover {
     display: flex;
     justify-content: space-between;
     font-size: 14px;
-    color: #555;
+    color: #475569;
     margin-bottom: 7px;
+    font-weight: bold;
 }
 
 .progress-line {
     width: 100%;
-    height: 8px;
-    background: #e5e5e5;
+    height: 9px;
+    background: #e2e8f0;
     border-radius: 10px;
     overflow: hidden;
 }
 
 .progress-fill {
     height: 100%;
-    background: #22a447;
+    background: linear-gradient(90deg, #06b6d4, #2563eb, #7c3aed);
     border-radius: 10px;
     transition: width 0.4s ease;
 }
@@ -83,18 +88,20 @@ button:hover {
 /* ================= SAVOL ================= */
 
 .question-number {
-    color: #666;
+    color: #6366f1;
     font-size: 15px;
     margin-bottom: 10px;
+    font-weight: bold;
 }
 
 .question {
-    background: #f8fafc;
+    background: linear-gradient(135deg, #eff6ff, #f5f3ff);
     padding: 18px;
     margin-top: 10px;
-    border-radius: 12px;
+    border-radius: 14px;
     text-align: left;
-    line-height: 1.5;
+    line-height: 1.6;
+    border-left: 5px solid #6366f1;
 }
 
 
@@ -105,12 +112,18 @@ button:hover {
 }
 
 .answer-button {
-    background: #eef5ff;
-    color: #222;
+    background: #eff6ff;
+    color: #1e293b;
     text-align: left;
     padding: 14px;
     margin-top: 10px;
-    border-radius: 10px;
+    border-radius: 12px;
+    border: 2px solid transparent;
+}
+
+.answer-button:hover {
+    background: #dbeafe;
+    border-color: #3b82f6;
 }
 
 .answer-button:disabled {
@@ -121,18 +134,18 @@ button:hover {
 /* ================= TO'G'RI JAVOB ================= */
 
 .answer-button.correct {
-    background: #d9f5df;
-    color: #16752d;
-    border: 2px solid #22a447;
+    background: #dcfce7;
+    color: #166534;
+    border: 2px solid #22c55e;
 }
 
 
 /* ================= NOTO'G'RI JAVOB ================= */
 
 .answer-button.wrong {
-    background: #ffe0e0;
-    color: #c62828;
-    border: 2px solid #e53935;
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 2px solid #ef4444;
 }
 
 
@@ -143,16 +156,16 @@ button:hover {
 }
 
 .correct-result {
-    background: #d9f5df;
-    color: #16752d;
+    background: #dcfce7;
+    color: #166534;
     padding: 12px;
     border-radius: 10px;
     font-weight: bold;
 }
 
 .wrong-result {
-    background: #ffe0e0;
-    color: #c62828;
+    background: #fee2e2;
+    color: #b91c1c;
     padding: 12px;
     border-radius: 10px;
     font-weight: bold;
@@ -160,8 +173,8 @@ button:hover {
 
 .correct-answer {
     margin-top: 8px;
-    background: white;
-    color: #16752d;
+    background: #ffffff;
+    color: #15803d;
     padding: 8px;
     border-radius: 8px;
 }
@@ -170,24 +183,25 @@ button:hover {
 /* ================= KEYINGISI ================= */
 
 .next-button {
-    background: #22a447;
-    color: white;
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    color: #ffffff;
     font-weight: bold;
     font-size: 17px;
     margin-top: 15px;
 }
 
 .next-button:hover {
-    background: #198c3b;
+    background: linear-gradient(135deg, #15803d, #16a34a);
 }
 
 
 /* ================= YAKUNIY NATIJA ================= */
 
 .result-card {
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
+    background: #ffffff;
+    padding: 22px;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.10);
 }
 
 .result-icon {
@@ -198,11 +212,12 @@ button:hover {
 .result-score {
     font-size: 32px;
     font-weight: bold;
+    color: #2563eb;
     margin-top: 15px;
 }
 
 .result-percent {
-    color: #22a447;
+    color: #16a34a;
     font-size: 23px;
     font-weight: bold;
     margin-top: 10px;
@@ -210,8 +225,8 @@ button:hover {
 
 .result-progress {
     width: 100%;
-    height: 8px;
-    background: #e5e5e5;
+    height: 9px;
+    background: #e2e8f0;
     border-radius: 10px;
     overflow: hidden;
     margin-top: 15px;
@@ -219,7 +234,7 @@ button:hover {
 
 .result-progress-fill {
     height: 100%;
-    background: #22a447;
+    background: linear-gradient(90deg, #22c55e, #06b6d4, #2563eb);
     border-radius: 10px;
     transition: width 0.5s ease;
 }
@@ -228,8 +243,8 @@ button:hover {
 /* ================= NATIJANI YUBORISH ================= */
 
 .send-button {
-    background: #0088cc;
-    color: white;
+    background: linear-gradient(135deg, #0284c7, #2563eb);
+    color: #ffffff;
     font-weight: bold;
 }
 
@@ -239,16 +254,179 @@ button:hover {
 .subscription-message {
     margin-top: 20px;
     padding: 15px;
-    background: #fff4d6;
-    color: #7a5700;
+    background: #fff7ed;
+    color: #9a3412;
     border-radius: 12px;
     font-size: 16px;
     line-height: 1.5;
-    border: 1px solid #f0d98c;
+    border: 1px solid #fdba74;
 }
 
 
-/* ================= TELEFON ================= */
+/* ================= XATO OYNASI ================= */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 9999;
+}
+
+.modal {
+    width: 100%;
+    max-width: 430px;
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
+}
+
+.modal-error {
+    color: #dc2626;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.modal-error-message {
+    background: #fff7ed;
+    color: #7c2d12;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #fed7aa;
+    line-height: 1.5;
+    margin-bottom: 18px;
+}
+
+
+/* ================= YOPISH ================= */
+
+.close-button {
+    background: #64748b;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+
+/* ================= TESTNI YAKUNLASH ================= */
+
+.finish-test-button {
+    background: linear-gradient(135deg, #f97316, #ef4444);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 14px;
+    margin-top: 18px;
+    border-radius: 12px;
+}
+
+.finish-test-button:hover {
+    background: linear-gradient(135deg, #ea580c, #dc2626);
+}
+
+
+/* ================= TASDIQLASH MODALI ================= */
+
+.confirm-modal {
+    width: 100%;
+    max-width: 430px;
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
+}
+
+.confirm-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #1e293b;
+    margin-bottom: 14px;
+}
+
+.confirm-text {
+    background: #eff6ff;
+    color: #334155;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #bfdbfe;
+    line-height: 1.5;
+    font-size: 15px;
+}
+
+
+/* ================= OTМENA / OK ================= */
+
+.confirm-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.confirm-buttons button {
+    flex: 1;
+    margin-top: 0;
+}
+
+.cancel-button {
+    background: #e2e8f0;
+    color: #334155;
+    font-weight: bold;
+}
+
+.ok-button {
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    color: #ffffff;
+    font-weight: bold;
+}
+
+
+/* ================= TO'LIQ YECHILMAGAN ================= */
+
+.incomplete-warning {
+    background: #fff7ed;
+    color: #92400e;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #fbbf24;
+    font-size: 15px;
+    line-height: 1.5;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+
+/* ================= NATIJA TUGMALARI ================= */
+
+.result-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.result-buttons button {
+    margin-top: 0;
+}
+
+.retry-button {
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.finish-close-button {
+    background: #e2e8f0;
+    color: #334155;
+    font-weight: bold;
+}
+
+
+/* ================= MOBIL TELEFON ================= */
 
 @media (max-width: 500px) {
 
@@ -274,4 +452,17 @@ button:hover {
         font-size: 30px;
     }
 
+    .result-percent {
+        font-size: 22px;
+    }
+
+    .result-buttons,
+    .confirm-buttons {
+        gap: 8px;
+    }
+
+    .modal,
+    .confirm-modal {
+        padding: 20px;
+    }
 }
