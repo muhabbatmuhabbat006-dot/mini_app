@@ -946,19 +946,15 @@ if (telegramId) {
 
 
             <p>
-
                 Sizga 10 ta savoldan
                 iborat bepul test beriladi.
-
             </p>
 
 
             <p>
-
                 ⚠️ Bepul test
                 Telegram ID bo‘yicha
                 faqat bir marta beriladi.
-
             </p>
 
 
@@ -975,3 +971,46 @@ if (telegramId) {
     `;
 
 }
+
+
+// ==================================================
+// TELEGRAM ID MA'LUMOTI
+// ==================================================
+
+window.testStartedFromTelegram = {
+
+    user_id: telegramId,
+
+    direction_id: directionId,
+
+    free_test: true
+
+};
+
+
+// ==================================================
+// KONSOLDA TEKSHIRISH
+// ==================================================
+
+console.log(
+    "===================================="
+);
+
+console.log(
+    "Telegram ID:",
+    telegramId
+);
+
+console.log(
+    "Yo'nalish ID:",
+    directionId
+);
+
+console.log(
+    "Bepul test:",
+    true
+);
+
+console.log(
+    "===================================="
+);
