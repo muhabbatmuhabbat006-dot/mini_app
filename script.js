@@ -45,17 +45,8 @@ const directionId = params.get("direction_id");
 // API MANZILI
 // ==================================================
 
-// MUHIM:
-// Bu yerga VPS SERVERINGIZ IP MANZILINI yozasiz.
-//
-// Masalan:
-// const API_URL = "http://123.123.123.123:8080/api/tests";
-//
-// Hozircha lokal test uchun:
-
 const API_URL =
-    "http://127.0.0.1:8080/api/tests";
-
+    "http://157.230.221.38:8080/api/tests";
 
 // ==================================================
 // TELEGRAM ID TEKSHIRISH
