@@ -46,7 +46,7 @@ const directionId = params.get("direction_id");
 // ==================================================
 
 const API_URL =
-    "http://157.230.221.38:8080/api/tests";
+    "http://157.230.221.38/api/tests";
 
 // ==================================================
 // TELEGRAM ID TEKSHIRISH
