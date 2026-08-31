@@ -46,7 +46,7 @@ const directionId = params.get("direction_id");
 // ==================================================
 
 const API_URL =
-    "https://james-name-fotos-fantasy.trycloudflare.com/api/tests";
+    "https://combining-essentially-files-collecting.trycloudflare.com/api/tests";
 // ==================================================
 // TELEGRAM ID TEKSHIRISH
 // ==================================================
