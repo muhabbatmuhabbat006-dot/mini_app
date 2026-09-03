@@ -47,6 +47,8 @@ const directionId = params.get("direction_id");
 
 const API_URL =
     "https://pole-shaved-diameter-considers.trycloudflare.com/api/tests";
+
+
 // ==================================================
 // TELEGRAM ID TEKSHIRISH
 // ==================================================
@@ -200,6 +202,10 @@ async function startTest() {
             await fetch(url);
 
 
+        // ==================================================
+        // SERVER JAVOBINI TEKSHIRISH
+        // ==================================================
+
         if (!response.ok) {
 
             throw new Error(
@@ -225,7 +231,7 @@ async function startTest() {
         // ==================================================
 
         if (
-            data.subscription_required
+            data.subscription_required === true
         ) {
 
             showSubscriptionRequired(
@@ -241,7 +247,9 @@ async function startTest() {
         // API XATOSI
         // ==================================================
 
-        if (!data.success) {
+        if (
+            data.success !== true
+        ) {
 
             throw new Error(
                 data.message ||
@@ -257,7 +265,7 @@ async function startTest() {
         // ==================================================
 
         if (
-            !data.tests ||
+            !Array.isArray(data.tests) ||
             data.tests.length === 0
         ) {
 
@@ -316,11 +324,11 @@ async function startTest() {
 
 
         // ==================================================
-        // 10 TA BEPUL TEST
+        // 5 TA NAMUNA BEPUL TEST
         // ==================================================
 
         questions =
-            questions.slice(0, 10);
+            questions.slice(0, 5);
 
 
         // ==================================================
@@ -393,6 +401,10 @@ async function startTest() {
 
 function showSubscriptionRequired(data) {
 
+    const usedFree =
+        data.used_free ?? 5;
+
+
     document.querySelector(
         ".container"
     ).innerHTML = `
@@ -409,14 +421,15 @@ function showSubscriptionRequired(data) {
 
             <div class="subscription-message">
 
-                ⚠️ Sizning 10 ta bepul
+                ⚠️ Sizning 5 ta bepul
                 testingiz tugagan.
 
                 <br><br>
 
                 📝 Ishlatilgan bepul testlar:
+
                 <b>
-                    ${data.used_free || 10}
+                    ${usedFree}
                 </b>
 
                 <br><br>
@@ -456,6 +469,13 @@ function showSubscriptionRequired(data) {
 // ==================================================
 
 function sendSubscriptionRequest() {
+
+    if (!telegramId) {
+
+        return;
+
+    }
+
 
     const result = {
 
@@ -520,10 +540,6 @@ function showQuestion() {
         ".container"
     ).innerHTML = `
 
-        <!-- ====================================== -->
-        <!-- PROGRESS -->
-        <!-- ====================================== -->
-
         <div class="progress-area">
 
             <div class="progress-info">
@@ -558,10 +574,6 @@ function showQuestion() {
         </div>
 
 
-        <!-- ====================================== -->
-        <!-- SAVOL -->
-        <!-- ====================================== -->
-
         <div class="question">
 
             <div class="question-number">
@@ -580,23 +592,11 @@ function showQuestion() {
         </div>
 
 
-        <!-- ====================================== -->
-        <!-- JAVOBLAR -->
-        <!-- ====================================== -->
-
         <div id="answers"></div>
 
 
-        <!-- ====================================== -->
-        <!-- NATIJA -->
-        <!-- ====================================== -->
-
         <div id="result"></div>
 
-
-        <!-- ====================================== -->
-        <!-- TESTNI YAKUNLASH -->
-        <!-- ====================================== -->
 
         <button
             class="finish-test-button"
@@ -606,10 +606,6 @@ function showQuestion() {
 
         </button>
 
-
-        <!-- ====================================== -->
-        <!-- ORQAGA -->
-        <!-- ====================================== -->
 
         <button
             class="close-button"
@@ -629,23 +625,29 @@ function showQuestion() {
     let answerHTML = "";
 
 
-    q.answers.forEach(
-        (answer, index) => {
+    if (
+        Array.isArray(q.answers)
+    ) {
 
-            answerHTML += `
+        q.answers.forEach(
+            (answer, index) => {
 
-                <button
-                    class="answer-button"
-                    onclick="checkAnswer(${index})">
+                answerHTML += `
 
-                    ${answer}
+                    <button
+                        class="answer-button"
+                        onclick="checkAnswer(${index})">
 
-                </button>
+                        ${answer}
 
-            `;
+                    </button>
 
-        }
-    );
+                `;
+
+            }
+        );
+
+    }
 
 
     document.getElementById(
@@ -687,9 +689,11 @@ function checkAnswer(selected) {
 
 
     const correct =
-        questions[
-            currentQuestion
-        ].correct;
+        Number(
+            questions[
+                currentQuestion
+            ].correct
+        );
 
 
     // ==================================================
@@ -743,9 +747,13 @@ function checkAnswer(selected) {
             .add("wrong");
 
 
-        buttons[correct]
-            .classList
-            .add("correct");
+        if (buttons[correct]) {
+
+            buttons[correct]
+                .classList
+                .add("correct");
+
+        }
 
 
         document.getElementById(
@@ -1171,10 +1179,6 @@ function finishTest(
             </div>
 
 
-            <!-- ================================= -->
-            <!-- PROGRESS -->
-            <!-- ================================= -->
-
             <div class="result-progress">
 
                 <div
@@ -1185,10 +1189,6 @@ function finishTest(
 
             </div>
 
-
-            <!-- ================================= -->
-            <!-- FIKR -->
-            <!-- ================================= -->
 
             <div class="subscription-message">
 
@@ -1231,10 +1231,6 @@ function finishTest(
             }
 
 
-            <!-- ================================= -->
-            <!-- NATIJANI YUBORISH -->
-            <!-- ================================= -->
-
             <button
                 class="send-button"
                 onclick="sendResult()">
@@ -1244,10 +1240,6 @@ function finishTest(
             </button>
 
 
-            <!-- ================================= -->
-            <!-- YANA URINISH -->
-            <!-- ================================= -->
-
             <button
                 class="retry-button"
                 onclick="startTest()">
@@ -1256,9 +1248,6 @@ function finishTest(
 
             </button>
 
-
-            <!-- ================================= -->
-            <!-- ORQAGA -->
 
             <button
                 class="finish-close-button"
@@ -1390,7 +1379,7 @@ if (
 
             <p>
 
-                Sizga 10 ta bepul test
+                Sizga 5 ta bepul test
                 beriladi.
 
             </p>
@@ -1418,7 +1407,7 @@ if (
                 class="send-button"
                 onclick="startTest()">
 
-                🆓 Bepul testni boshlash
+                🆓 5 ta bepul testni boshlash
 
             </button>
 
