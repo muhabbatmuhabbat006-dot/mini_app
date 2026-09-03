@@ -46,7 +46,7 @@ const directionId = params.get("direction_id");
 // ==================================================
 
 const API_URL =
-    "https://combining-essentially-files-collecting.trycloudflare.com/api/tests";
+    "https://pole-shaved-diameter-considers.trycloudflare.com/api/tests";
 // ==================================================
 // TELEGRAM ID TEKSHIRISH
 // ==================================================
