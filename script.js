@@ -341,69 +341,71 @@ async function startTest() {
 
 
         // ==================================================
-        // TESTNI KO‘RSATISH
-        // ==================================================
+// TESTNI KO‘RSATISH
+// ==================================================
 
-        showQuestion();
-
-
-    } catch (error) {
-
-        console.error(
-            "TEST API ERROR:",
-            error
-        );
+showQuestion();
 
 
-        document.querySelector(
-            ".container"
-        ).innerHTML = `
+} catch (error) {
 
-            <div class="result-card">
+    console.error(
+        "TEST API ERROR:",
+        error
+    );
 
-                <div class="result-icon">
-                    ❌
-                </div>
 
-                <h2>
-                    Xatolik yuz berdi
-                </h2>
+    document.querySelector(
+        ".container"
+    ).innerHTML = `
 
-                <p>
-                    Testlarni yuklab bo‘lmadi.
-                </p>
+        <div class="result-card">
 
-                <p>
-                    <small>
-                        ${error.message}
-                    </small>
-                </p>
-
-                <button
-                    class="retry-button"
-                    onclick="startTest()">
-
-                    🔄 Qayta urinish
-
-                </button>
-
-                <button
-                    class="finish-close-button"
-                    onclick="goBack()">
-
-                    ← Orqaga
-
-                </button>
-
+            <div class="result-icon">
+                ❌
             </div>
 
-        `;
+            <h2>
+                Xatolik yuz berdi
+            </h2>
+
+            <p>
+                Testlarni yuklab bo‘lmadi.
+            </p>
+
+            <p>
+                <small>
+                    ${error.message}
+                </small>
+            </p>
+
+            <button
+                class="retry-button"
+                onclick="startTest()">
+
+                🔄 Qayta urinish
+
+            </button>
+
+            <button
+                class="finish-close-button"
+                onclick="goBack()">
+
+                ← Orqaga
+
+            </button>
+
+        </div>
+
+    `;
 
     }
+
+}
+
 // ==================================================
 // OBUNA KERAK
 // ==================================================
-
 function showSubscriptionRequired(data) {
 
     const usedFree =
