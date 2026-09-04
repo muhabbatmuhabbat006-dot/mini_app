@@ -1335,7 +1335,10 @@ function sendResult() {
             directionId,
 
         full_finish:
-            testCompleted
+            testCompleted,
+
+        access_type:
+            accessType
 
     };
 
