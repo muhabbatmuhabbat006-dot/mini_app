@@ -31,6 +31,8 @@ let testCompleted = false;
 
 let selectedAnswer = false;
 
+let resultSent = false;
+
 // ==================================================
 // YO‘NALISH ID
 // ==================================================
@@ -144,6 +146,8 @@ async function startTest() {
     testCompleted = false;
 
     selectedAnswer = false;
+
+    resultSent = false;
 
     currentQuestion = 0;
 
@@ -315,7 +319,7 @@ async function startTest() {
         }
 
 
-        // ==================================================
+                // ==================================================
         // TESTLARNI SAQLASH
         // ==================================================
 
@@ -333,11 +337,15 @@ async function startTest() {
 
 
         // ==================================================
-        // 5 TA NAMUNA BEPUL TEST
+        // BEPUL TEST UCHUN 5 TA SAVOL
         // ==================================================
 
-        questions =
-            questions.slice(0, 5);
+        if (accessType === "free") {
+
+            questions =
+                questions.slice(0, 5);
+
+        }
 
 
         // ==================================================
