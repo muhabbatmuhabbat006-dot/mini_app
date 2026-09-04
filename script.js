@@ -1325,6 +1325,19 @@ function sendResult() {
     }
 
 
+    // ==================================================
+    // NATIJANI FAQAT 1 MARTA YUBORISH
+    // ==================================================
+
+    if (resultSent) {
+
+        return;
+
+    }
+
+    resultSent = true;
+
+
     const result = {
 
         type:
@@ -1374,7 +1387,6 @@ function sendResult() {
     );
 
 }
-
 
 // ==================================================
 // BOSHLANG‘ICH OYNA
