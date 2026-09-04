@@ -23,12 +23,13 @@ let score = 0;
 
 let questions = [];
 
+let accessType = "free";
+
 let testStarted = false;
 
 let testCompleted = false;
 
 let selectedAnswer = false;
-
 
 // ==================================================
 // YO‘NALISH ID
@@ -178,7 +179,7 @@ async function startTest() {
     `;
 
 
-    // ==================================================
+       // ==================================================
     // API DAN TESTLARNI OLISH
     // ==================================================
 
@@ -218,6 +219,14 @@ async function startTest() {
 
         const data =
             await response.json();
+
+
+        // ==================================================
+        // TESTGA KIRISH TURI
+        // ==================================================
+
+        accessType =
+            data.access_type || "free";
 
 
         console.log(
@@ -391,10 +400,6 @@ async function startTest() {
         `;
 
     }
-
-}
-
-
 // ==================================================
 // OBUNA KERAK
 // ==================================================
