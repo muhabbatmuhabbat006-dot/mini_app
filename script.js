@@ -833,9 +833,13 @@ function nextQuestion() {
 
 function confirmFinish() {
 
-    const remaining =
-        questions.length -
-        currentQuestion;
+    const answeredQuestions =
+    currentQuestion +
+    (selectedAnswer ? 1 : 0);
+
+const remaining =
+    questions.length -
+    answeredQuestions;
 
 
     if (remaining <= 0) {
@@ -907,6 +911,23 @@ function showFinishModal(
 
                 <br><br>
 
+                Bepul test huquqingiz
+                <b>
+                    to‘liq tugaydi.
+                </b>
+
+                <br><br>
+
+                Keyin yangi testlardan foydalanish
+                uchun
+
+                <b>
+                    obuna sotib olishingiz
+                    kerak bo‘ladi.
+                </b>
+
+                <br><br>
+
                 Testni yakunlaysizmi?
 
             </div>
@@ -918,16 +939,16 @@ function showFinishModal(
                     class="cancel-button"
                     onclick="closeModal()">
 
-                    Bekor qilish
+                    ▶️ Davom etish
 
                 </button>
 
 
                 <button
                     class="ok-button"
-                    onclick="finishTest(false)">
+                    onclick="finishIncompleteTest()">
 
-                    Testni yakunlash
+                    🏁 Testni yakunlash
 
                 </button>
 
@@ -943,7 +964,6 @@ function showFinishModal(
     );
 
 }
-
 
 // ==================================================
 // MODALNI YOPISH
@@ -972,10 +992,18 @@ function closeModal() {
 
 function confirmExit() {
 
+    const answeredQuestions =
+        currentQuestion +
+        (selectedAnswer ? 1 : 0);
+
     const remaining =
         questions.length -
-        currentQuestion;
+        answeredQuestions;
 
+
+    // ==================================================
+    // AGAR 5 TA TEST TO‘LIQ ISHLANGAN BO‘LSA
+    // ==================================================
 
     if (remaining <= 0) {
 
@@ -986,10 +1014,15 @@ function confirmExit() {
     }
 
 
+    // ==================================================
+    // OGOHLANTIRISH OYNASI
+    // ==================================================
+
+    closeModal();
+
+
     const modal =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
 
     modal.className =
@@ -1002,28 +1035,46 @@ function confirmExit() {
 
             <div class="modal-error">
 
-                ⚠️ Testdan chiqish
+                ⚠️ Test hali tugamadi
 
             </div>
 
 
             <div class="confirm-text">
 
-                Siz testni tugatmadingiz.
+                Sizda hali
+
+                <b>
+                    ${remaining} ta savol
+                </b>
+
+                qolgan.
 
                 <br><br>
 
                 Agar hozir chiqsangiz,
 
                 <b>
-                    bepul test huquqingiz
-                    sarflangan hisoblanadi.
+                    qolgan bepul savollar
+                    bekor qilinadi.
                 </b>
 
                 <br><br>
 
-                Testni yakunlang yoki
-                obuna oling.
+                Bepul test huquqingiz
+                <b>
+                    to‘liq tugaydi.
+                </b>
+
+                <br><br>
+
+                Keyin testlarni davom ettirish
+                uchun
+
+                <b>
+                    obuna sotib olishingiz
+                    kerak bo‘ladi.
+                </b>
 
             </div>
 
@@ -1034,16 +1085,16 @@ function confirmExit() {
                     class="cancel-button"
                     onclick="closeModal()">
 
-                    Davom etish
+                    ▶️ Davom etish
 
                 </button>
 
 
                 <button
                     class="ok-button"
-                    onclick="finishTest(false)">
+                    onclick="exitTest()">
 
-                    Testni yakunlash
+                    🚪 Chiqish
 
                 </button>
 
@@ -1054,12 +1105,36 @@ function confirmExit() {
     `;
 
 
-    document.body.appendChild(
-        modal
-    );
+    document.body.appendChild(modal);
 
 }
 
+// ==================================================
+// TESTDAN HAQIQIY CHIQISH
+// ==================================================
+
+function exitTest() {
+
+    closeModal();
+
+    testCompleted = false;
+
+    sendResult(true);
+}
+
+// ==================================================
+// TO‘LIQ TUGATILMAGAN TESTNI YAKUNLASH
+// ==================================================
+
+function finishIncompleteTest() {
+
+    closeModal();
+
+    testCompleted = false;
+
+    sendResult(true);
+
+}
 
 // ==================================================
 // TEST YAKUNI
@@ -1316,76 +1391,55 @@ function goBack() {
 // NATIJANI BOTGA YUBORISH
 // ==================================================
 
-function sendResult() {
+function sendResult(forceConsumeFree = false) {
 
     if (!telegramId) {
-
         return;
-
     }
 
-
-    // ==================================================
-    // NATIJANI FAQAT 1 MARTA YUBORISH
-    // ==================================================
-
     if (resultSent) {
-
         return;
-
     }
 
     resultSent = true;
 
-
     const result = {
 
-        type:
-            "test_result",
+        type: "test_result",
 
-        user_id:
-            telegramId,
+        user_id: telegramId,
 
-        score:
-            score,
+        score: score,
 
-        total:
-            questions.length,
+        total: questions.length,
 
         percent:
             questions.length > 0
             ?
             Math.round(
-                (
-                    score /
-                    questions.length
-                ) * 100
+                (score / questions.length) * 100
             )
             :
             0,
 
-        direction_id:
-            directionId,
+        direction_id: Number(directionId),
 
-        full_finish:
-            testCompleted,
+        full_finish: testCompleted,
 
-        access_type:
-            accessType
+        access_type: accessType,
+
+        consume_free: forceConsumeFree
 
     };
-
 
     console.log(
         "TEST NATIJASI:",
         result
     );
 
-
     tg.sendData(
         JSON.stringify(result)
     );
-
 }
 
 // ==================================================
@@ -1404,44 +1458,37 @@ if (
         <div class="result-card">
 
             <div class="result-icon">
-
                 📝
-
             </div>
 
-
             <h1>
-
                 Test platformasi
-
             </h1>
 
-
             <p>
-
-                Sizga 5 ta bepul test
+                Sizga jami
+                <b>5 ta bepul test</b>
                 beriladi.
-
             </p>
 
-
             <p>
-
-                📚 Har bir yo‘nalish uchun
-                bepul test limiti alohida
+                📚 Bu 5 ta test
+                <b>barcha yo‘nalishlar uchun umumiy</b>
                 hisoblanadi.
-
             </p>
 
+            <p>
+                ⚠️ Testni tugatmasdan
+                chiqib ketsangiz,
+                bepul test huquqingiz
+                <b>to‘liq tugaydi.</b>
+            </p>
 
             <p>
-
                 🔒 Bepul testlar tugagach,
                 to‘liq testlardan foydalanish
                 uchun obuna kerak bo‘ladi.
-
             </p>
-
 
             <button
                 class="send-button"
