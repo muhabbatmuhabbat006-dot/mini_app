@@ -1247,11 +1247,23 @@ function finishTest(
             </button>
 
 
-            <button
-                class="retry-button"
-                onclick="startTest()">
+            <div class="subscription-message">
 
-                🔄 Yana urinish
+                🔒 <b>5 ta bepul testingiz tugadi.</b>
+
+                <br><br>
+
+                To‘liq testlardan foydalanish
+                uchun obuna sotib oling.
+
+            </div>
+
+
+            <button
+                class="send-button"
+                onclick="sendSubscriptionRequest()">
+
+                💳 Obuna sotib olish
 
             </button>
 
@@ -1269,8 +1281,6 @@ function finishTest(
     `;
 
 }
-
-
 // ==================================================
 // ORQAGA QAYTISH
 // ==================================================
