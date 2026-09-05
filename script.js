@@ -1391,57 +1391,146 @@ function goBack() {
 // NATIJANI BOTGA YUBORISH
 // ==================================================
 
-function sendResult(forceConsumeFree = false) {
+function sendResult(
+    forceConsumeFree = (accessType === "free")
+) {
+
+    // ==================================================
+    // TELEGRAM ID TEKSHIRISH
+    // ==================================================
 
     if (!telegramId) {
+
+        console.error(
+            "❌ Telegram ID mavjud emas"
+        );
+
         return;
+
     }
 
+
+    // ==================================================
+    // NATIJA AVVAL YUBORILGAN BO‘LSA
+    // ==================================================
+
     if (resultSent) {
+
+        console.log(
+            "⚠️ Natija allaqachon yuborilgan"
+        );
+
         return;
+
     }
+
+
+    // ==================================================
+    // NATIJANI YUBORILGAN DEB BELGILASH
+    // ==================================================
 
     resultSent = true;
 
+
+    // ==================================================
+    // NATIJA
+    // ==================================================
+
     const result = {
 
-        type: "test_result",
+        type:
+            "test_result",
 
-        user_id: telegramId,
+        user_id:
+            telegramId,
 
-        score: score,
+        score:
+            score,
 
-        total: questions.length,
+        total:
+            questions.length,
 
         percent:
             questions.length > 0
             ?
             Math.round(
-                (score / questions.length) * 100
+                (
+                    score /
+                    questions.length
+                ) * 100
             )
             :
             0,
 
-        direction_id: Number(directionId),
+        direction_id:
+            Number(directionId),
 
-        full_finish: testCompleted,
+        full_finish:
+            testCompleted,
 
-        access_type: accessType,
+        access_type:
+            accessType,
 
-        consume_free: forceConsumeFree
+        consume_free:
+            forceConsumeFree
 
     };
 
+
+    // ==================================================
+    // KONSOLDA NATIJANI KO‘RSATISH
+    // ==================================================
+
     console.log(
-        "TEST NATIJASI:",
+        "===================================="
+    );
+
+    console.log(
+        "TEST NATIJASI:"
+    );
+
+    console.log(
         result
     );
 
-    tg.sendData(
-        JSON.stringify(result)
+    console.log(
+        "free_test_used uchun:",
+        result.consume_free
     );
-}
 
+    console.log(
+        "===================================="
+    );
+
+
+    // ==================================================
+    // BOTGA YUBORISH
+    // ==================================================
+
+    try {
+
+        tg.sendData(
+            JSON.stringify(result)
+        );
+
+        console.log(
+            "✅ Natija botga yuborildi"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "❌ Natijani botga yuborishda xatolik:",
+            error
+        );
+
+        resultSent = false;
+
+    }
+
+}
 // ==================================================
 // BOSHLANG‘ICH OYNA
 // ==================================================
