@@ -1132,7 +1132,28 @@ function finishIncompleteTest() {
 
     testCompleted = false;
 
+    // Natijani botga yuborish
     sendResult(true);
+
+    // Mini Appni yopish
+    setTimeout(() => {
+
+        try {
+
+            tg.close();
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Mini Appni yopishda xatolik:",
+                error
+            );
+
+        }
+
+    }, 500);
 
 }
 
