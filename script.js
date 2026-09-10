@@ -34,15 +34,24 @@ let selectedAnswer = false;
 let resultSent = false;
 
 // ==================================================
-// YO‘NALISH ID
+// MUTAXASSISLIK VA MODUL
 // ==================================================
 
 const params = new URLSearchParams(
     window.location.search
 );
 
-const directionId = params.get("direction_id");
+const specialtyId =
+    params.get("specialty_id");
 
+const directionId =
+    params.get("direction_id");
+
+const moduleNumber =
+    params.get("module");
+
+const sampleMode =
+    params.get("sample") === "1";
 
 // ==================================================
 // API MANZILI
@@ -84,12 +93,22 @@ if (!telegramId) {
 
 
 // ==================================================
-// YO‘NALISH ID TEKSHIRISH
+// MUTAXASSISLIK VA MODUL TEKSHIRISH
 // ==================================================
 
-if (!directionId && telegramId) {
+if (
+    (
+        !specialtyId ||
+        !directionId ||
+        !moduleNumber
+    )
+    &&
+    telegramId
+) {
 
-    document.querySelector(".container").innerHTML = `
+    document.querySelector(
+        ".container"
+    ).innerHTML = `
 
         <div class="result-card">
 
@@ -98,12 +117,14 @@ if (!directionId && telegramId) {
             </div>
 
             <h2>
-                Yo‘nalish tanlanmagan
+                Mutaxassislik, yo‘nalish
+                yoki modul tanlanmagan
             </h2>
 
             <p>
                 Testni boshlash uchun
-                avval yo‘nalishni tanlang.
+                avval mutaxassislik,
+                yo‘nalish va modulni tanlang.
             </p>
 
         </div>
@@ -111,7 +132,6 @@ if (!directionId && telegramId) {
     `;
 
 }
-
 
 // ==================================================
 // TESTNI BOSHLASH
@@ -126,17 +146,19 @@ async function startTest() {
     }
 
 
-    if (!directionId) {
+    if (
+        !specialtyId ||
+        !directionId ||
+        !moduleNumber
+    ) {
 
         alert(
-            "❌ Yo‘nalish aniqlanmadi."
+            "❌ Mutaxassislik, yo‘nalish yoki modul aniqlanmadi."
         );
 
         return;
 
     }
-
-
     // ----------------------------------------------
     // TEST HOLATI
     // ----------------------------------------------
@@ -183,29 +205,32 @@ async function startTest() {
     `;
 
 
-       // ==================================================
-    // API DAN TESTLARNI OLISH
-    // ==================================================
+     // ==================================================
+// API DAN TESTLARNI OLISH
+// ==================================================
 
-    try {
+try {
 
-        const url =
-            API_URL +
-            "?direction_id=" +
-            encodeURIComponent(directionId) +
-            "&user_id=" +
-            encodeURIComponent(telegramId);
-
-
-        console.log(
-            "API:",
-            url
-        );
+    const url =
+        API_URL +
+        "?specialty_id=" +
+        encodeURIComponent(specialtyId) +
+        "&direction_id=" +
+        encodeURIComponent(directionId) +
+        "&module=" +
+        encodeURIComponent(moduleNumber) +
+        "&user_id=" +
+        encodeURIComponent(telegramId);
 
 
-        const response =
-            await fetch(url);
+    console.log(
+        "API:",
+        url
+    );
 
+
+    const response =
+        await fetch(url);
 
         // ==================================================
         // SERVER JAVOBINI TEKSHIRISH
@@ -273,53 +298,52 @@ async function startTest() {
         }
 
 
-        // ==================================================
-        // TESTLAR YO‘Q
-        // ==================================================
+      // ==================================================
+// TESTLAR YO‘Q
+// ==================================================
 
-        if (
-            !Array.isArray(data.tests) ||
-            data.tests.length === 0
-        ) {
+if (
+    !Array.isArray(data.tests) ||
+    data.tests.length === 0
+) {
 
-            document.querySelector(
-                ".container"
-            ).innerHTML = `
+    document.querySelector(
+        ".container"
+    ).innerHTML = `
 
-                <div class="result-card">
+        <div class="result-card">
 
-                    <div class="result-icon">
-                        📭
-                    </div>
+            <div class="result-icon">
+                📭
+            </div>
 
-                    <h2>
-                        Testlar mavjud emas
-                    </h2>
+            <h2>
+                Testlar mavjud emas
+            </h2>
 
-                    <p>
-                        Ushbu yo‘nalish uchun
-                        hozircha test savollari
-                        kiritilmagan.
-                    </p>
+            <p>
+                Ushbu yo‘nalish uchun
+                hozircha test savollari
+                kiritilmagan.
+            </p>
 
-                    <button
-                        class="finish-close-button"
-                        onclick="goBack()">
+            <button
+                class="finish-close-button"
+                onclick="goBack()">
 
-                        ← Orqaga
+                ← Orqaga
 
-                    </button>
+            </button>
 
-                </div>
+        </div>
 
-            `;
+    `;
 
-            return;
+    return;
 
-        }
+}
 
-
-                // ==================================================
+                      // ==================================================
         // TESTLARNI SAQLASH
         // ==================================================
 
@@ -346,8 +370,6 @@ async function startTest() {
                 questions.slice(0, 5);
 
         }
-
-
         // ==================================================
 // TESTNI KO‘RSATISH
 // ==================================================
@@ -485,26 +507,53 @@ function showSubscriptionRequired(data) {
 
 function sendSubscriptionRequest() {
 
+    // Telegram user ID mavjudligini tekshirish
     if (!telegramId) {
 
-        return;
+        console.error(
+            "Telegram ID topilmadi!"
+        );
 
+        return;
     }
 
 
+    // ==================================================
+    // YO‘NALISH ID TEKSHIRISH
+    // ==================================================
+
+    if (!directionId) {
+
+        console.error(
+            "Direction ID topilmadi!"
+        );
+
+        tg.showAlert(
+            "❌ Yo‘nalish aniqlanmadi."
+        );
+
+        return;
+    }
+
+
+    // ==================================================
+    // OBUNA SO‘ROVI MA'LUMOTLARI
+    // ==================================================
+
     const result = {
 
-        type:
-            "subscription_required",
+        type: "subscription_required",
 
-        user_id:
-            telegramId,
+        user_id: telegramId,
 
-        direction_id:
-            directionId
+        direction_id: Number(directionId)
 
     };
 
+
+    // ==================================================
+    // KONSOLGA CHIQARISH
+    // ==================================================
 
     console.log(
         "OBUNA SO‘ROVI:",
@@ -512,12 +561,34 @@ function sendSubscriptionRequest() {
     );
 
 
-    tg.sendData(
-        JSON.stringify(result)
-    );
+    // ==================================================
+    // TELEGRAM BOTGA YUBORISH
+    // ==================================================
+
+    try {
+
+        tg.sendData(
+            JSON.stringify(result)
+        );
+
+        console.log(
+            "Obuna so‘rovi botga yuborildi."
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Obuna so‘rovini yuborishda xatolik:",
+            error
+        );
+
+        tg.showAlert(
+            "❌ So‘rov yuborishda xatolik yuz berdi."
+        );
+
+    }
 
 }
-
 
 // ==================================================
 // SAVOLNI KO‘RSATISH
@@ -1576,15 +1647,15 @@ if (
             </h1>
 
             <p>
-                Sizga jami
+                Sizga ushbu yo‘nalish uchun
                 <b>5 ta bepul test</b>
                 beriladi.
             </p>
 
             <p>
-                📚 Bu 5 ta test
-                <b>barcha yo‘nalishlar uchun umumiy</b>
-                hisoblanadi.
+                📚 Har bir yo‘nalish uchun
+                <b>5 ta bepul test</b>
+                alohida hisoblanadi.
             </p>
 
             <p>
@@ -1596,6 +1667,7 @@ if (
 
             <p>
                 🔒 Bepul testlar tugagach,
+                ushbu yo‘nalishdagi
                 to‘liq testlardan foydalanish
                 uchun obuna kerak bo‘ladi.
             </p>
@@ -1613,7 +1685,6 @@ if (
     `;
 
 }
-
 
 // ==================================================
 // TELEGRAM ID MA‘LUMOTI
