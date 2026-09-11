@@ -99,7 +99,6 @@ if (!telegramId) {
 if (
     (
         !specialtyId ||
-        !directionId ||
         !moduleNumber
     )
     &&
@@ -117,14 +116,14 @@ if (
             </div>
 
             <h2>
-                Mutaxassislik, yo‘nalish
-                yoki modul tanlanmagan
+                Mutaxassislik yoki modul
+                tanlanmagan
             </h2>
 
             <p>
                 Testni boshlash uchun
-                avval mutaxassislik,
-                yo‘nalish va modulni tanlang.
+                avval mutaxassislik
+                va modulni tanlang.
             </p>
 
         </div>
@@ -148,17 +147,17 @@ async function startTest() {
 
     if (
         !specialtyId ||
-        !directionId ||
         !moduleNumber
     ) {
 
         alert(
-            "❌ Mutaxassislik, yo‘nalish yoki modul aniqlanmadi."
+            "❌ Mutaxassislik yoki modul aniqlanmadi."
         );
 
         return;
 
     }
+    
     // ----------------------------------------------
     // TEST HOLATI
     // ----------------------------------------------
@@ -205,7 +204,7 @@ async function startTest() {
     `;
 
 
-     // ==================================================
+    // ==================================================
 // API DAN TESTLARNI OLISH
 // ==================================================
 
@@ -220,7 +219,9 @@ try {
         "&module=" +
         encodeURIComponent(moduleNumber) +
         "&user_id=" +
-        encodeURIComponent(telegramId);
+        encodeURIComponent(telegramId) +
+        "&sample=" +
+        (sampleMode ? "1" : "0");
 
 
     console.log(
@@ -231,7 +232,6 @@ try {
 
     const response =
         await fetch(url);
-
         // ==================================================
         // SERVER JAVOBINI TEKSHIRISH
         // ==================================================
@@ -1629,7 +1629,8 @@ function sendResult(
 
 if (
     telegramId &&
-    directionId
+    specialtyId &&
+    moduleNumber
 ) {
 
     document.querySelector(
