@@ -1,3 +1,5 @@
+alert("YANGI JS ISHLAYAPTI");
+
 const tg = window.Telegram.WebApp;
 
 tg.expand();
@@ -9,9 +11,7 @@ tg.ready();
 // ==================================================
 
 const telegramUser = tg.initDataUnsafe?.user;
-
 const telegramId = telegramUser?.id;
-
 
 // ==================================================
 // TEST HOLATI
