@@ -343,33 +343,56 @@ if (
 
 }
 
-                      // ==================================================
-        // TESTLARNI SAQLASH
-        // ==================================================
+      // ==================================================
+// TESTLARNI SAQLASH
+// ==================================================
 
-        questions =
-            data.tests;
-
-
-        // ==================================================
-        // TESTLARNI ARALASHTIRISH
-        // ==================================================
-
-        questions.sort(
-            () => Math.random() - 0.5
-        );
+questions = [...data.tests];
 
 
-        // ==================================================
-        // BEPUL TEST UCHUN 5 TA SAVOL
-        // ==================================================
+// ==================================================
+// SAMPLE REJIMI
+// ==================================================
+// Backend sample testlarni oldindan belgilangan
+// tartibda yuboradi.
+// Sample rejimida ularni aralashtirmaymiz.
 
-        if (accessType === "free") {
+if (sampleMode) {
 
-            questions =
-                questions.slice(0, 5);
+    console.log(
+        "SAMPLE REJIMI: testlar aralashtirilmaydi."
+    );
 
-        }
+}
+
+
+// ==================================================
+// ODDIY TEST REJIMI
+// ==================================================
+// Faqat sample bo'lmagan testlarni aralashtiramiz.
+
+else {
+
+    questions.sort(
+        () => Math.random() - 0.5
+    );
+
+}
+
+
+// ==================================================
+// BEPUL TEST UCHUN 5 TA SAVOL
+// ==================================================
+
+if (
+    !sampleMode &&
+    accessType === "free"
+) {
+
+    questions =
+        questions.slice(0, 5);
+
+}
         // ==================================================
 // TESTNI KO‘RSATISH
 // ==================================================
@@ -1190,7 +1213,7 @@ function exitTest() {
 
     testCompleted = false;
 
-    sendResult(true);
+    sendResult();
 }
 
 // ==================================================
@@ -1204,30 +1227,10 @@ function finishIncompleteTest() {
     testCompleted = false;
 
     // Natijani botga yuborish
-    sendResult(true);
+    sendResult();
 
     // Mini Appni yopish
     setTimeout(() => {
-
-        try {
-
-            tg.close();
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "Mini Appni yopishda xatolik:",
-                error
-            );
-
-        }
-
-    }, 500);
-
-}
-
 // ==================================================
 // TEST YAKUNI
 // ==================================================
@@ -1633,60 +1636,118 @@ if (
     moduleNumber
 ) {
 
-    document.querySelector(
-        ".container"
-    ).innerHTML = `
+    // ==================================================
+    // NAMUNAVIY TEST REJIMI
+    // ==================================================
 
-        <div class="result-card">
+    if (sampleMode) {
 
-            <div class="result-icon">
-                📝
+        document.querySelector(
+            ".container"
+        ).innerHTML = `
+
+            <div class="result-card">
+
+                <div class="result-icon">
+                    📝
+                </div>
+
+                <h1>
+                    Namunaviy testlar
+                </h1>
+
+                <p>
+                    Ushbu modul uchun
+                    <b>5 ta namunaviy test</b>
+                    berilgan.
+                </p>
+
+                <p>
+                    📚 Namunaviy testlar
+                    bepul test huquqingizdan
+                    <b>ayrilmaydi.</b>
+                </p>
+
+                <p>
+                    🔒 To‘liq testlardan foydalanish
+                    uchun obuna kerak bo‘ladi.
+                </p>
+
+                <button
+                    class="send-button"
+                    onclick="startTest()">
+
+                    📝 Namunaviy testlarni boshlash
+
+                </button>
+
             </div>
 
-            <h1>
-                Test platformasi
-            </h1>
+        `;
 
-            <p>
-                Sizga ushbu yo‘nalish uchun
-                <b>5 ta bepul test</b>
-                beriladi.
-            </p>
+    }
 
-            <p>
-                📚 Har bir yo‘nalish uchun
-                <b>5 ta bepul test</b>
-                alohida hisoblanadi.
-            </p>
+    // ==================================================
+    // ODDIY BEPUL TEST REJIMI
+    // ==================================================
 
-            <p>
-                ⚠️ Testni tugatmasdan
-                chiqib ketsangiz,
-                bepul test huquqingiz
-                <b>to‘liq tugaydi.</b>
-            </p>
+    else {
 
-            <p>
-                🔒 Bepul testlar tugagach,
-                ushbu yo‘nalishdagi
-                to‘liq testlardan foydalanish
-                uchun obuna kerak bo‘ladi.
-            </p>
+        document.querySelector(
+            ".container"
+        ).innerHTML = `
 
-            <button
-                class="send-button"
-                onclick="startTest()">
+            <div class="result-card">
 
-                🆓 5 ta bepul testni boshlash
+                <div class="result-icon">
+                    📝
+                </div>
 
-            </button>
+                <h1>
+                    Test platformasi
+                </h1>
 
-        </div>
+                <p>
+                    Sizga ushbu yo‘nalish uchun
+                    <b>5 ta bepul test</b>
+                    beriladi.
+                </p>
 
-    `;
+                <p>
+                    📚 Har bir yo‘nalish uchun
+                    <b>5 ta bepul test</b>
+                    alohida hisoblanadi.
+                </p>
+
+                <p>
+                    ⚠️ Testni tugatmasdan
+                    chiqib ketsangiz,
+                    bepul test huquqingiz
+                    <b>to‘liq tugaydi.</b>
+                </p>
+
+                <p>
+                    🔒 Bepul testlar tugagach,
+                    ushbu yo‘nalishdagi
+                    to‘liq testlardan foydalanish
+                    uchun obuna kerak bo‘ladi.
+                </p>
+
+                <button
+                    class="send-button"
+                    onclick="startTest()">
+
+                    🆓 5 ta bepul testni boshlash
+
+                </button>
+
+            </div>
+
+        `;
+
+    }
 
 }
-
 // ==================================================
 // TELEGRAM ID MA‘LUMOTI
 // ==================================================
