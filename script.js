@@ -1636,56 +1636,32 @@ if (
     moduleNumber
 ) {
 
-    // ==================================================
-    // NAMUNAVIY TEST REJIMI
-    // ==================================================
-
+    // NAMUNAVIY TEST BO‘LSA — TESTNI DARHOL BOSHLAYDI
     if (sampleMode) {
 
-        document.querySelector(
-            ".container"
-        ).innerHTML = `
+        startTest();
 
+    } else {
+
+        document.querySelector(".container").innerHTML = `
             <div class="result-card">
 
-                <div class="result-icon">
-                    📝
-                </div>
-
-                <h1>
-                    Namunaviy testlar
-                </h1>
+                <h1>📝 Testlar</h1>
 
                 <p>
-                    Ushbu modul uchun
-                    <b>5 ta namunaviy test</b>
-                    berilgan.
-                </p>
-
-                <p>
-                    📚 Namunaviy testlar
-                    bepul test huquqingizdan
-                    <b>ayrilmaydi.</b>
-                </p>
-
-                <p>
-                    🔒 To‘liq testlardan foydalanish
-                    uchun obuna kerak bo‘ladi.
+                    Ushbu modul bo‘yicha testlarni boshlashingiz mumkin.
                 </p>
 
                 <button
                     class="send-button"
                     onclick="startTest()">
-
-                    📝 Namunaviy testlarni boshlash
-
+                    🆓 5 ta bepul testni boshlash
                 </button>
 
             </div>
-
         `;
-
     }
+}
 
     // ==================================================
     // ODDIY BEPUL TEST REJIMI
