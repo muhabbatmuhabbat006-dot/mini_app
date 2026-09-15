@@ -1768,3 +1768,18 @@ console.log(
 console.log(
     "===================================="
 );
+// ==================================================
+// AVTOMATIK TESTNI BOSHLASH
+// ==================================================
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    if (
+        specialtyId &&
+        moduleNumber &&
+        telegramId
+    ) {
+        startTest();
+    }
+
+});
