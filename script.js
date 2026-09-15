@@ -204,7 +204,7 @@ async function startTest() {
     `;
 
 
- // ==================================================
+// ==================================================
 // API DAN TESTLARNI OLISH
 // ==================================================
 
@@ -236,6 +236,142 @@ try {
         "API JAVOB KELDI:",
         response.status
     );
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            "Server javobi: " +
+            response.status
+        );
+
+    }
+
+
+    const data =
+        await response.json();
+
+
+    console.log(
+        "API NATIJA:",
+        data
+    );
+
+
+    if (
+        data.success !== true
+    ) {
+
+        throw new Error(
+            data.message ||
+            data.error ||
+            "Testlarni olishda xatolik."
+        );
+
+    }
+
+
+    if (
+        !Array.isArray(data.tests) ||
+        data.tests.length === 0
+    ) {
+
+        throw new Error(
+            "Testlar topilmadi."
+        );
+
+    }
+
+
+    // ==================================================
+    // TESTLARNI SAQLASH
+    // ==================================================
+
+    questions =
+        [...data.tests];
+
+
+    accessType =
+        data.access_type || "sample";
+
+
+    currentQuestion = 0;
+
+    score = 0;
+
+    selectedAnswer = false;
+
+
+    console.log(
+        "TESTLAR:",
+        questions
+    );
+
+
+    // ==================================================
+    // 5 TA NAMUNAVIY TESTNI OCHISH
+    // ==================================================
+
+    if (sampleMode) {
+
+        questions =
+            questions.slice(0, 5);
+
+    }
+
+
+    // ==================================================
+    // BIRINCHI SAVOLNI KO‘RSATISH
+    // ==================================================
+
+    showQuestion();
+
+
+} catch (error) {
+
+    console.error(
+        "TEST API ERROR:",
+        error
+    );
+
+
+    document.querySelector(
+        ".container"
+    ).innerHTML = `
+
+        <div class="result-card">
+
+            <div class="result-icon">
+                ❌
+            </div>
+
+            <h2>
+                Xatolik yuz berdi
+            </h2>
+
+            <p>
+                Testlarni yuklab bo‘lmadi.
+            </p>
+
+            <p>
+                <small>
+                    ${error.message}
+                </small>
+            </p>
+
+            <button
+                class="retry-button"
+                onclick="startTest()">
+
+                🔄 Qayta urinish
+
+            </button>
+
+        </div>
+
+    `;
+
+}
         // ==================================================
         // SERVER JAVOBINI TEKSHIRISH
         // ==================================================
