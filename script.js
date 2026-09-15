@@ -868,42 +868,32 @@ function showQuestion() {
 
 
     // ==================================================
-    // JAVOB VARIANTLARI
-    // ==================================================
+// JAVOB VARIANTLARI
+// ==================================================
 
-    let answerHTML = "";
+let answerHTML = "";
 
+if (Array.isArray(q.answers)) {
 
-    if (
-        Array.isArray(q.answers)
-    ) {
+    q.answers.forEach((answer, index) => {
 
-        q.answers.forEach(
-            (answer, index) => {
+        const letter = String.fromCharCode(65 + index);
 
-                answerHTML += `
+        answerHTML += `
+            <button
+                class="answer-button"
+                onclick="checkAnswer(${index})"
+            >
+                <span class="answer-letter">${letter}</span>
+                <span class="answer-text">${answer}</span>
+            </button>
+        `;
 
-                    <button
-                        class="answer-button"
-                        onclick="checkAnswer(${index})">
-
-                        ${answer}
-
-                    </button>
-
-                `;
-
-            }
-        );
-
-    }
-
-
-    document.getElementById(
-        "answers"
-    ).innerHTML = answerHTML;
+    });
 
 }
+
+document.getElementById("answers").innerHTML = answerHTML;
 
 
 // ==================================================
