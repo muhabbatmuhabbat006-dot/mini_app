@@ -204,7 +204,7 @@ async function startTest() {
     `;
 
 
-    // ==================================================
+ // ==================================================
 // API DAN TESTLARNI OLISH
 // ==================================================
 
@@ -214,8 +214,6 @@ try {
         API_URL +
         "?specialty_id=" +
         encodeURIComponent(specialtyId) +
-        "&direction_id=" +
-        encodeURIComponent(directionId) +
         "&module=" +
         encodeURIComponent(moduleNumber) +
         "&user_id=" +
@@ -232,6 +230,12 @@ try {
 
     const response =
         await fetch(url);
+
+
+    console.log(
+        "API JAVOB KELDI:",
+        response.status
+    );
         // ==================================================
         // SERVER JAVOBINI TEKSHIRISH
         // ==================================================
