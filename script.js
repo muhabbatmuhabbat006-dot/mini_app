@@ -1655,73 +1655,71 @@ if (
                 <button
                     class="send-button"
                     onclick="startTest()">
+
                     🆓 5 ta bepul testni boshlash
+
                 </button>
 
             </div>
         `;
+
     }
-}
+
+} else {
 
     // ==================================================
     // ODDIY BEPUL TEST REJIMI
     // ==================================================
 
-    else {
+    document.querySelector(".container").innerHTML = `
 
-        document.querySelector(
-            ".container"
-        ).innerHTML = `
+        <div class="result-card">
 
-            <div class="result-card">
-
-                <div class="result-icon">
-                    📝
-                </div>
-
-                <h1>
-                    Test platformasi
-                </h1>
-
-                <p>
-                    Sizga ushbu yo‘nalish uchun
-                    <b>5 ta bepul test</b>
-                    beriladi.
-                </p>
-
-                <p>
-                    📚 Har bir yo‘nalish uchun
-                    <b>5 ta bepul test</b>
-                    alohida hisoblanadi.
-                </p>
-
-                <p>
-                    ⚠️ Testni tugatmasdan
-                    chiqib ketsangiz,
-                    bepul test huquqingiz
-                    <b>to‘liq tugaydi.</b>
-                </p>
-
-                <p>
-                    🔒 Bepul testlar tugagach,
-                    ushbu yo‘nalishdagi
-                    to‘liq testlardan foydalanish
-                    uchun obuna kerak bo‘ladi.
-                </p>
-
-                <button
-                    class="send-button"
-                    onclick="startTest()">
-
-                    🆓 5 ta bepul testni boshlash
-
-                </button>
-
+            <div class="result-icon">
+                📝
             </div>
 
-        `;
+            <h1>
+                Test platformasi
+            </h1>
 
-    }
+            <p>
+                Sizga ushbu yo‘nalish uchun
+                <b>5 ta bepul test</b>
+                beriladi.
+            </p>
+
+            <p>
+                📚 Har bir yo‘nalish uchun
+                <b>5 ta bepul test</b>
+                alohida hisoblanadi.
+            </p>
+
+            <p>
+                ⚠️ Testni tugatmasdan
+                chiqib ketsangiz,
+                bepul test huquqingiz
+                <b>to‘liq tugaydi.</b>
+            </p>
+
+            <p>
+                🔒 Bepul testlar tugagach,
+                ushbu yo‘nalishdagi
+                to‘liq testlardan foydalanish
+                uchun obuna kerak bo‘ladi.
+            </p>
+
+            <button
+                class="send-button"
+                onclick="startTest()">
+
+                🆓 5 ta bepul testni boshlash
+
+            </button>
+
+        </div>
+
+    `;
 
 }
 // ==================================================
